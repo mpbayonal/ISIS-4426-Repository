@@ -3,33 +3,31 @@
         <div class="col-md-4 mx-auto">
             <div class="card text-center">
                 <div class="card-header">
-                    <h3>Sign In</h3>
+                    <h3>SignUp</h3>
                 </div>
                 <div class="card-body">
                     <img src="../../../assets/images/signup.png" alt="Logo"
                         class="card-img-top mx-auto m-2 rounded-circle w-50">
-                    <form>
+                    <form >
                         <div class="form-group">
-                            <input class="form-control" type="text" name="nombre" placeholder="Nombre" autofocus
-                                required>
+                            <input class="form-control" type="text" name="empresa" placeholder="Nombre de la empresa"
+                                autofocus required >
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="text" name="cedula" placeholder="cedula" 
-                                required>
+                            <input class="form-control" type="email" name="email" placeholder="Email" 
+                            required>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="text" name="empresa" placeholder="Nombre de la Empresa" 
-                                required>
+                            <input class="form-control" id="password" type="password" name="password"
+                                placeholder="Password" required>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="email" name="email" placeholder="email" 
-                                required>
+                            <input class="form-control" id="confirmpassword" type="password" name="confirmpassword"
+                                placeholder="Confirm Password" required>
                         </div>
+                        
                         <div class="form-group">
-                            <input class="form-control" type="password" name="password" placeholder="password" required>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-success btn-block">
+                            <button class="btn btn-success btn-block" routerLink="/empresa/proyectos">
                                 Ingresar
                             </button>
                         </div>
