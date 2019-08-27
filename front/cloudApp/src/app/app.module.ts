@@ -15,6 +15,8 @@ import { ListarDisenosComponent } from './componentes/diseños/listar-disenos/li
 import { AgregarProyectoComponent } from './componentes/proyectos/agregar-proyecto/agregar-proyecto.component';
 import { AgregarDisenoComponent } from './componentes/diseños/agregar-diseno/agregar-diseno.component';
 import { ConfirmarEnvioComponent } from './componentes/diseños/confirmar-envio/confirmar-envio.component';
+import {ProyectoService} from './servicios/proyecto/proyecto.service';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -33,9 +35,10 @@ import { ConfirmarEnvioComponent } from './componentes/diseños/confirmar-envio/
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [ProyectoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
