@@ -1,16 +1,16 @@
 <div class="container p-4">
     <div class="row">
         <div class="col-md-3">
-            <div class="card text-center">
+            <div class="card text-center " *ngFor="let proyecto of proyectos">
                 <div class="card-body">
                     <a >
                         <h3 class="card-title text-uppercase">
-                            nombre
+                            {{proyecto.nombre}}
                         </h3>
                     </a>
                     
-                    <p class="m-2"> Descripcion: </p>
-                    <p class="m-2"> Valor estimado: </p>
+                    <p class="m-2"> Descripcion: {{proyecto.descripcion}} </p>
+                    <p class="m-2"> Valor estimado: {{proyecto.pago}} </p>
 
                     <hr>
                     <a class="btn btn-success" routerLink="/empresa/proyectos/idProyecto/diseños" >
