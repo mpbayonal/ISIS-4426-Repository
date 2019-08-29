@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
+import {MatPaginatorModule} from '@angular/material/paginator';
+
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './componentes/login/login.component';
@@ -17,6 +19,8 @@ import { AgregarDisenoComponent } from './componentes/diseños/agregar-diseno/ag
 import { ConfirmarEnvioComponent } from './componentes/diseños/confirmar-envio/confirmar-envio.component';
 import {ProyectoService} from './servicios/proyecto/proyecto.service';
 import {HttpClientModule} from '@angular/common/http';
+import { PaginatePipe } from './pipes/paginate.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -31,14 +35,18 @@ import {HttpClientModule} from '@angular/common/http';
     ListarDisenosComponent,
     AgregarProyectoComponent,
     AgregarDisenoComponent,
-    ConfirmarEnvioComponent
+    ConfirmarEnvioComponent,
+    PaginatePipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatPaginatorModule,
+    BrowserAnimationsModule
   ],
   providers: [ProyectoService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
