@@ -33,20 +33,28 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL=True
 # Extra places for collectstatic to find static files.
 
+
+
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    'backApp',
+    'django.contrib.sites',
     'django.contrib.admin',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backApp',
+
 
 
 ]
@@ -67,7 +75,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'back.urls'
 
-
+AUTH_USER_MODEL = "backApp.UserCustom"
 
 
 REST_FRAMEWORK = {
@@ -114,6 +122,7 @@ EST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 10
 }
+
 
 
 # Password validation

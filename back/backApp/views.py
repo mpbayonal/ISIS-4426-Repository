@@ -41,15 +41,6 @@ class DetailProyecto(generics.RetrieveUpdateDestroyAPIView):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
 
-class ListEmpresa(generics.ListCreateAPIView):
-    queryset = Empresa.objects.all()
-    serializer_class = EmpresaSerializer
-
-
-
-class DetailEmpresa(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Empresa.objects.all()
-    serializer_class = EmpresaSerializer
 
 class ListDiseno(generics.ListCreateAPIView):
     queryset = Diseno.objects.all()
@@ -61,6 +52,7 @@ class ListDiseno(generics.ListCreateAPIView):
 class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Diseno.objects.all()
 	serializer_class = DisenoSerializer
+	authentication_classes = [SessionAuthentication, BasicAuthentication]
 	permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
