@@ -14,8 +14,8 @@ class ProyectoSerializer(serializers.ModelSerializer):
         model = Proyecto
         fields = '__all__'
 
-class DiseñoSerializer(serializers.ModelSerializer):
+class DisenoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Diseño
+        model = Diseno
         fields = '__all__'
 

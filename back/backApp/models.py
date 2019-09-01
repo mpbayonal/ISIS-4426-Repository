@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 class Empresa(models.Model):
 
@@ -13,6 +14,7 @@ class Empresa(models.Model):
 
 
 class Proyecto(models.Model):
+    user = models.ForeignKey(User, null=True , on_delete= models.CASCADE)
     nombre = models.CharField(max_length=500)
     descripcion = models.CharField(max_length=500)
     pago = models.IntegerField()
@@ -22,7 +24,7 @@ class Proyecto(models.Model):
         return self.nombre
 
 
-class Diseño(models.Model):
+class Diseno(models.Model):
 
     nombre = models.CharField(max_length=500)
     email = models.CharField(max_length=500)
