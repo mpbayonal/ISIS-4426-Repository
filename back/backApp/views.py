@@ -9,11 +9,17 @@ from .serializers import *
 from rest_framework import generics
 from . import serializers
 from django.http import HttpResponse, JsonResponse
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework import serializers
 from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+
 
 
 from django.views.generic import TemplateView
@@ -51,9 +57,13 @@ class ListDiseno(generics.ListCreateAPIView):
 
 
 
+
 class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Diseno.objects.all()
-    serializer_class = DisenoSerializer
+	queryset = Diseno.objects.all()
+	serializer_class = DisenoSerializer
+	permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
 
 
 

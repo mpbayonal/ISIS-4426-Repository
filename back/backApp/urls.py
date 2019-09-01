@@ -1,7 +1,7 @@
 from django.conf.urls import *
 from django.views.decorators.csrf import csrf_exempt
 from . import views
-from django.urls import path
+from django.urls import include, path
 
 from rest_framework import routers
 
@@ -19,6 +19,7 @@ urlpatterns = [
     path('disenos/<int:pk>/', views.DetailDiseno.as_view()),
     path('empresas/', views.ListEmpresa.as_view()),
     path('empresas/<int:pk>/', views.DetailEmpresa.as_view()),
+    path('auth/', include('rest_auth.urls')),
 
 
     # url(r'^login/', views.login),
