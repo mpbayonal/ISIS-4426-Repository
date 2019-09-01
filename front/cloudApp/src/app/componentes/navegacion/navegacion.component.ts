@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
+import { Router } from '@angular/router';
+import {Location} from '@angular/common'
 
 @Component({
   selector: 'app-navegacion',
@@ -6,10 +9,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navegacion.component.css']
 })
 export class NavegacionComponent implements OnInit {
+  
+  public isLogged= false;
+  constructor(private usuarioService: UsuarioService, private router:Router, private location: Location) { }
 
-  constructor() { }
+  logOut(): void{
+    this.usuarioService.logoutUser();
+    this.router.navigate(['/']);
+    location.reload();
 
+  }
+  chequearLogin(){
+    if(this.usuarioService.getToken()){
+      this.isLogged=true;
+    }else{
+      this.isLogged=false;
+    }
+  }
   ngOnInit() {
+    this.chequearLogin();
   }
 
 }

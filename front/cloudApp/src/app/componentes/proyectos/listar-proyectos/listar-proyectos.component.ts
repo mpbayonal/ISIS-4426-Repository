@@ -12,7 +12,7 @@ export class ListarProyectosComponent implements OnInit {
   proyectos: any = [];
   constructor(private proyectosService: ProyectoService) { }
 
-  page_size: number = 10;
+  page_size: number = 1;
   page_number: number =1 ;
 
   ngOnInit() {

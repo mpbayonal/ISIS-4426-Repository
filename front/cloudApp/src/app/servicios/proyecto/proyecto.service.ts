@@ -6,11 +6,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProyectoService {
 
-  API_URI = 'http://localhost:8000/';
+  API_URI = 'http://localhost:8000';
   constructor(private http: HttpClient) { }
 
 
   getProyectos(){
-    return this.http.get(`${this.API_URI}getdata`)
+    return this.http.get(`${this.API_URI}/getdata`)
   }
 }

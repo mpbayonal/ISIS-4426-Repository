@@ -8,13 +8,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home <span class="sr-only"></span></a>
+                        <a class="nav-link" routerLink="/" routerLinkActive="active" *ngIf="!isLogged" [routerLinkActiveOptions]="{exact: true}">Home <span class="sr-only"></span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/signin" routerLinkActive="active">SignIn</a>
+                        <a class="nav-link" routerLink="/signin" routerLinkActive="active" *ngIf="!isLogged">SignIn</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/signup" routerLinkActive="active">SignUp</a>
+                        <a class="nav-link" routerLink="/signup" routerLinkActive="active" *ngIf="!isLogged">SignUp</a>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" routerLink="/empresa/proyectos" *ngIf="isLogged">proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" (click)="logOut()" *ngIf="isLogged">LogOut</a>
                     </li>
                 </ul>
             </div>

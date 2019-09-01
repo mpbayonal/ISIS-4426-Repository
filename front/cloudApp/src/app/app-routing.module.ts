@@ -10,6 +10,7 @@ import {AgregarProyectoComponent} from './componentes/proyectos/agregar-proyecto
 import {EditarProyectosComponent} from './componentes/proyectos/editar-proyectos/editar-proyectos.component';
 import {AgregarDisenoComponent} from './componentes/diseños/agregar-diseno/agregar-diseno.component';
 import {ConfirmarEnvioComponent} from './componentes/diseños/confirmar-envio/confirmar-envio.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -34,11 +35,13 @@ const routes: Routes = [
     component: ListarDisenosComponent
   },{
     path: 'empresa/proyectos/idProyecto/editar',
-    component: EditarProyectosComponent
+    component: EditarProyectosComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'empresa/proyectos/agregar',
-    component: AgregarProyectoComponent
+    component: AgregarProyectoComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'empresa/proyectos/idProyecto/diseños/agregarDiseño',
