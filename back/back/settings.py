@@ -111,8 +111,12 @@ WSGI_APPLICATION = 'back.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'designmatch',
+        'USER': 'designmatch',
+        'PASSWORD': 'Segur@12',
+        'HOST': '172.24.42.30',
+        'PORT': '',
     }
 }
 

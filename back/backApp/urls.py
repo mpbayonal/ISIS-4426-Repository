@@ -12,7 +12,7 @@ urlpatterns = [
 
 
 
-    url(r'^getdata/', views.get_data),
+    path('getdata/', views.get_data),
     path('proyectos/', views.ListProyecto.as_view()),
     path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
     path('disenos/', views.ListDiseno.as_view()),
@@ -22,6 +22,7 @@ urlpatterns = [
     path('auth/signup/', include('rest_auth.registration.urls')),
 
 
+    path(r'image', views.image),
 
     # url(r'^login/', views.login),
     # url(r'^&', views.index),
