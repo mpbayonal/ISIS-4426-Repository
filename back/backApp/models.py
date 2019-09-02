@@ -27,7 +27,6 @@ class Proyecto(models.Model):
     descripcion = models.CharField(max_length=500)
     pago = models.IntegerField()
 
-
     def __str__(self):
         return self.nombre
 
