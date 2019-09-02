@@ -30,25 +30,40 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 
+CORS_ORIGIN_ALLOW_ALL=True
 # Extra places for collectstatic to find static files.
 
+
+
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    'backApp',
+    'django.contrib.sites',
     'django.contrib.admin',
+    'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'whitenoise.runserver_nostatic',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backApp',
+
+
 
 ]
 
 MIDDLEWARE = [
 
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,9 +75,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'back.urls'
 
+AUTH_USER_MODEL = "backApp.UserCustom"
 
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', )
+}
 
 TEMPLATES = [
     {
@@ -100,6 +122,7 @@ EST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 10
 }
+
 
 
 # Password validation

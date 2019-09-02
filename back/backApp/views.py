@@ -6,12 +6,21 @@ from django.shortcuts import render
 # Create your views here.
 from .models import *
 from .serializers import *
+from rest_framework import generics
+from . import serializers
 from django.http import HttpResponse, JsonResponse
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework import serializers
 from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+
+
 
 from django.views.generic import TemplateView
 
@@ -19,23 +28,36 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 
-class HomePageView(TemplateView):
-	def get(self, request, **kwargs):
-		return render(request, 'index.html', context=None)
+class ListProyecto(generics.ListCreateAPIView):
+    queryset = Proyecto.objects.all()
+    serializer_class = ProyectoSerializer
 
 
 
-class LinksPageView(TemplateView):
-	def get(self, request, **kwargs):
-		return render(request, 'links.html', context=None)
+class DetailProyecto(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Proyecto.objects.all()
+    serializer_class = ProyectoSerializer
 
 
-class Customers(TemplateView):
-	def getCust(request):
-		name = 'liran'
-		return HttpResponse('{ "name":"' + name + '", "age":31, "city":"New York" }')
+class ListDiseno(generics.ListCreateAPIView):
+    queryset = Diseno.objects.all()
+    serializer_class = DisenoSerializer
+
+
+
+
+class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
+	queryset = Diseno.objects.all()
+	serializer_class = DisenoSerializer
+	authentication_classes = [SessionAuthentication, BasicAuthentication]
+	permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+
+
 
 @csrf_exempt
 def get_data(request):

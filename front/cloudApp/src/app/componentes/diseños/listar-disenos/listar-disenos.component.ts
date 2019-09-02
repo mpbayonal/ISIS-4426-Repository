@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DiseñoService } from 'src/app/servicios/diseño/diseño.service';
 
 @Component({
   selector: 'app-listar-disenos',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListarDisenosComponent implements OnInit {
 
-  constructor() { }
+  diseños: any = [];
+  constructor(private diseñosService: DiseñoService) { }
 
   ngOnInit() {
+    
   }
 
 }

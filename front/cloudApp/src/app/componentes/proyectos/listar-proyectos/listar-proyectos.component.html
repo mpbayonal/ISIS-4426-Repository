@@ -1,37 +1,44 @@
 <div class="container p-4">
     <div class="row">
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
+        <div class="col-md-6" *ngFor="let proyecto of proyectos | paginate: page_size:page_number">
+            <div class="card text-center  " id="proyectosCard" >
+                <div class="card-header bg-dark text-white"  >
                     <a >
                         <h3 class="card-title text-uppercase">
-                            nombre
+                            {{proyecto.nombre}}
                         </h3>
                     </a>
                     
-                    <p class="m-2"> Descripcion: </p>
-                    <p class="m-2"> Valor estimado: </p>
-
-                    <hr>
-                    <a class="btn btn-success" routerLink="/empresa/proyectos/idProyecto/diseños" >
+                    <p class="m-2"> Descripcion: {{proyecto.descripcion}} </p>
+                    <p class="m-2"> Valor estimado: ${{proyecto.pago}} </p>
+                </div>
+                    
+                    <div class="card-body" >
+                    <a class="btn btn-success m-2"  routerLink="/empresa/proyectos/idProyecto/diseños" >
                         Ver Proyecto (diseños)
                     </a>
-                    <a class="btn btn-danger" >
+                    <a class="btn btn-danger " >
                         Eliminar Proyecto
                     </a>
-                    <a class="btn btn-secondary" routerLink="/empresa/proyectos/idProyecto/editar" >
+                    <a class="btn btn-secondary m-2" routerLink="/empresa/proyectos/idProyecto/editar" >
                         Editar Proyecto
                     </a>
                     <hr>
-                    <a class="btn btn-success" routerLink="/empresa/proyectos/idProyecto/diseños/agregarDiseño" >
+                    <a class="btn btn-success m-2" routerLink="/empresa/proyectos/idProyecto/diseños/agregarDiseño" >
                         Agregar Diseño
                     </a>
                 </div>
             </div>
         </div>
     </div>
+    <mat-paginator [length]="proyectos.length"
+              [pageSize]="page_size"
+              
+              (page)="handlePage($event)">
+   </mat-paginator>
     <hr>
     <div class="box-footer clearfix">
                 <a class="btn btn-sm btn-info btn-flat pull-left" routerLink="/empresa/proyectos/agregar" >Agregar Proyecto</a>
     </div>
+
 </div>

@@ -2,27 +2,37 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
-class Empresa(models.Model):
-
-    nombre = models.CharField(max_length=500)
+class UserCustom(AbstractUser):
     url = models.CharField(max_length=500)
+    # add additional fields in here
 
-    def __str__(self):
-        return self.nombre
+
+# class Empresa(models.Model):
+#
+#
+#     url = models.CharField(max_length=500)
+#
+#     def __str__(self):
+#         return self.nombre
+
 
 
 class Proyecto(models.Model):
+    empresa = models.ForeignKey(settings.AUTH_USER_MODEL , null=True, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=500)
     descripcion = models.CharField(max_length=500)
     pago = models.IntegerField()
-    empresa = models.ForeignKey(Empresa, on_delete= models.CASCADE)
+
 
     def __str__(self):
         return self.nombre
 
 
-class Diseño(models.Model):
+class Diseno(models.Model):
 
     nombre = models.CharField(max_length=500)
     email = models.CharField(max_length=500)
