@@ -7,7 +7,8 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 class UserCustom(AbstractUser):
-    url = models.CharField(max_length=500)
+
+    url = models.CharField(max_length=500, default= "url")
     # add additional fields in here
 
 
