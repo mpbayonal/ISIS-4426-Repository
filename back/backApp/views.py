@@ -19,9 +19,6 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-
-
-
 import datetime
 import os 
 from django.views.generic import TemplateView
@@ -48,17 +45,18 @@ class ListDiseno(generics.ListCreateAPIView):
     queryset = Diseno.objects.all()
     serializer_class = DisenoSerializer
 
+class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Diseno.objects.all()
+    serializer_class = DisenoSerializer
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
 
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
 
-class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Diseno.objects.all()
-    serializer_class = DisenoSerializer()
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = (IsAuthenticatedOrReadOnly,)
+
 
 
 class HomePageView(TemplateView):
@@ -87,6 +85,7 @@ def get_proyectos_Url(request, urlLink):
         serializer = ProyectoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+
 def get_diseno_proyecto(request, proyecto_id):
 
     if request.method == 'GET':
@@ -94,6 +93,15 @@ def get_diseno_proyecto(request, proyecto_id):
         proyecto = Proyecto.objects.get(id = proyecto_id)
         data = Diseno.objects.filter(proyecto_id= proyecto.id)
         serializer = DisenoSerializer(data, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+def get_diseno_proyecto_Sin_Detalles(request, proyecto_id):
+
+    if request.method == 'GET':
+
+        proyecto = Proyecto.objects.get(id = proyecto_id)
+        data = Diseno.objects.filter(proyecto_id= proyecto.id)
+        serializer = DisenoSinDetallesSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
 def get_url_email(request, pUsername):
