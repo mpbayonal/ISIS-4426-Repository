@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
     email: "",
     password: ""
   }
-  
+  credenciales: any = {}
 
   setUsuario(){
     localStorage.setItem("usuario", this.usuario.username);
@@ -27,13 +27,20 @@ export class LoginComponent implements OnInit {
     return localStorage.getItem("usuario")
   }
   login(){
+    this.usuarioService.getUrl(this.usuario.username).subscribe(
+      data2=>{
+        this.credenciales=data2
+        localStorage.setItem("url", this.credenciales.url);
+        localStorage.setItem("id", this.credenciales.id);
+      }
+    )
     this.usuarioService.loginUsuario(this.usuario).subscribe(
       data=>{
         
         let token = data
         this.usuarioService.setToken(token)
         this.setUsuario();
-        this.router.navigate( ['empresa/'+ this.usuario.username +'/proyectos']);
+        this.router.navigate(['empresa/'+ localStorage.getItem("url")+ '/proyectos'])
         location.reload();
       }, err => console.log(err)
     )

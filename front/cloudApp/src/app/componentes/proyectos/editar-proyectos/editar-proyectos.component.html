@@ -6,19 +6,19 @@
                     <form>
                         <div class="form-group">
                             <label>Nombre</label>
-                            <input type="text" class="form-control" name="nombre" placeholder="Nombre" autofocus>
+                            <input type="text" class="form-control"  [(ngModel)]="proyecto.nombre" name="nombre" placeholder="Nombre" autofocus>
                         </div>
                         <div class="form-group">
                             <label>Descripcion</label>
-                            <input type="text" class="form-control" name="descripcion" placeholder="Descripcion">
+                            <input type="text" class="form-control"  [(ngModel)]="proyecto.descripcion" name="descripcion" placeholder="Descripcion">
                         </div>
                         <div class="form-group">
                             <label>Valor Estimado</label>
-                            <input type="text" class="form-control" name="valorEstimado" placeholder="Valor Estimado">
+                            <input type="text" class="form-control"   [(ngModel)]="proyecto.pago" name="pago" placeholder="Valor Estimado">
                         </div>
 
                         <div class="form-group">
-                            <button class="btn btn-success btn-block">
+                            <button class="btn btn-success btn-block" (click)="editarProyecto()">
                                 Guardar
                             </button>
                         </div>

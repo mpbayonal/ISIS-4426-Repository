@@ -17,14 +17,14 @@
                     <a class="btn btn-success m-2"  *ngIf="isLogged" routerLink="/empresa/proyectos/idProyecto/diseños" >
                         Ver Proyecto (diseños)
                     </a>
-                    <a class="btn btn-danger " *ngIf="isLogged">
+                    <a class="btn btn-danger " *ngIf="isLogged" (click)="eliminarProyecto(proyecto.id)">
                         Eliminar Proyecto
                     </a>
-                    <a class="btn btn-secondary m-2" *ngIf="isLogged" routerLink="/empresa/proyectos/idProyecto/editar" >
+                    <a class="btn btn-secondary m-2" *ngIf="isLogged" (click)="formularioEditar(proyecto.id)" >
                         Editar Proyecto
                     </a>
-                    <hr>
-                    <a class="btn btn-success m-2" routerLink="/empresa/proyectos/idProyecto/diseños/agregarDiseño" >
+                    
+                    <a class="btn btn-success m-2" routerLink="/empresa/proyectos/idProyecto/diseños/agregarDiseño" *ngIf="!isLogged" >
                         Agregar Diseño
                     </a>
                 </div>
@@ -38,7 +38,7 @@
    </mat-paginator>
     <hr>
     <div class="box-footer clearfix">
-                <a class="btn btn-sm btn-info btn-flat pull-left" routerLink="/empresa/proyectos/agregar" *ngIf="isLogged">Agregar Proyecto</a>
+                <a class="btn btn-sm btn-info btn-flat pull-left" (click)="formularioAgregar()" *ngIf="isLogged">Agregar Proyecto</a>
     </div>
 
 </div>

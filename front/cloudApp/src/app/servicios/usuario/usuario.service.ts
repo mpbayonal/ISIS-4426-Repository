@@ -11,6 +11,10 @@ export class UsuarioService {
   API_URI = 'http://localhost:8000';
   constructor(private http: HttpClient, private router: Router) { }
 
+  getUrl(username){
+    return this.http.get(`${this.API_URI}/user/${username}/`)
+  }
+
   loginUsuario(usuario){
     return this.http.post(`${this.API_URI}/auth/login/`, usuario );
   }
@@ -28,6 +32,9 @@ export class UsuarioService {
   }
   logoutUser() {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("url");
+    localStorage.removeItem("id");
     this.router.navigate(['/']);
   }
 }

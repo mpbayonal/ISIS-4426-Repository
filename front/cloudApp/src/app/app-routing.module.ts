@@ -37,12 +37,14 @@ const routes: Routes = [
   {
     path:'empresa/:url/proyectos/idProyecto/diseños',
     component: ListarDisenosComponent
-  },{
-    path: 'empresa/proyectos/idProyecto/editar',
+  },
+  {
+    path: 'empresa/proyectos/:idProyecto/editar',
     component: EditarProyectosComponent,
     canActivate: [AuthGuard]
   },
   {
+    
     path: 'empresa/:url/proyectos/agregar',
     component: AgregarProyectoComponent,
     canActivate: [AuthGuard]

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProyectoService } from 'src/app/servicios/proyecto/proyecto.service';
 import {Router} from '@angular/router'
 
+
 @Component({
   selector: 'app-agregar-proyecto',
   templateUrl: './agregar-proyecto.component.html',
@@ -15,13 +16,20 @@ export class AgregarProyectoComponent implements OnInit {
     nombre: '',
     descripcion: '',
     pago: '',
-    empresa: localStorage.getItem("usuario")
+    empresa: localStorage.getItem("id")
   }
   agregarProyecto(){
-    this.proyectoService.agregarProyecto(this.proyecto);
-    this.router.navigate( ['empresa/'+ localStorage.getItem("usuario") +'/proyectos']);
+    this.proyectoService.agregarProyecto(this.proyecto).subscribe(
+      res=>{
+        this.router.navigate( ['empresa/'+localStorage.getItem("url") +'/proyectos']);
+      },
+      err=> console.log(err)
+    );  
+
+    
   }
   ngOnInit() {
+    
   }
 
 }

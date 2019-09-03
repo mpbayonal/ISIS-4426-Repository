@@ -29,7 +29,7 @@ export class NavegacionComponent implements OnInit {
     this.chequearLogin();
   }
   listarProyectos(){
-    this.router.navigate(['empresa/'+ localStorage.getItem("usuario")+ '/proyectos'])
+    this.router.navigate(['empresa/'+ localStorage.getItem("url")+ '/proyectos'])
   }
 
 }
