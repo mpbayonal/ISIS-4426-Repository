@@ -19,9 +19,6 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-
-
-
 import datetime
 import os 
 from django.views.generic import TemplateView
@@ -48,17 +45,18 @@ class ListDiseno(generics.ListCreateAPIView):
     queryset = Diseno.objects.all()
     serializer_class = DisenoSerializer
 
+class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Diseno.objects.all()
+    serializer_class = DisenoSerializer
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
 
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
 
-class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Diseno.objects.all()
-    serializer_class = DisenoSerializer()
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = (IsAuthenticatedOrReadOnly,)
+
 
 
 class HomePageView(TemplateView):
