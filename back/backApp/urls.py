@@ -13,11 +13,12 @@ urlpatterns = [
 
 
     path('proyecto/<urlLink>/', views.get_proyectos_Url),
+    path('user/<pUsername>/', views.get_url_email),
     path('disenos/<int:proyecto_id>/', views.get_diseno_proyecto),
     path('proyectos/', views.ListProyecto.as_view()),
     path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
     path('disenos/', views.ListDiseno.as_view()),
-    path('disenos/<int:pk>/', views.DetailDiseno.as_view()),
+    path('diseno/<int:pk>/', views.DetailDiseno.as_view),
 
     path('auth/', include('rest_auth.urls')),
     path('auth/signup/', include('rest_auth.registration.urls')),
