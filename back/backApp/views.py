@@ -78,9 +78,12 @@ class Customers(TemplateView):
 
 
 @csrf_exempt
-def get_data(request):
-    data = Proyecto.objects.all()
+def get_data(request, urlLink):
+
     if request.method == 'GET':
+
+        user = UserCustom.objects.get(url = urlLink)
+        data = Proyecto.objects.filter(empresa_id= user.id)
         serializer = ProyectoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -88,7 +91,7 @@ def get_data(request):
 @csrf_exempt
 def image(request):
     proyecto = Proyecto.objects.all().first()
-    data = Diseño(fecha=datetime.datetime.utcnow)
+    data = Diseno(fecha=datetime.datetime.utcnow)
     data.nombre = "test user"
     data.email = "test@user.com"
     data.estado = "No Procesado"
@@ -103,5 +106,5 @@ def image(request):
         # draw.text((x, y),"Sample Text",(r,g,b))
         draw.text((0, 0), "Hola Mundo", (255, 255, 255))
         img.save('sample-out.png')
-        serializer = DiseñoSerializer(data, many=False)
+        serializer = DisenoSerializer(data, many=False)
         return JsonResponse(serializer.data, safe=False)

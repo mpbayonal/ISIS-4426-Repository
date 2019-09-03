@@ -12,7 +12,7 @@ urlpatterns = [
 
 
 
-    path('getdata/', views.get_data),
+    path('proyecto/<urlLink>/', views.get_data),
     path('proyectos/', views.ListProyecto.as_view()),
     path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
     path('disenos/', views.ListDiseno.as_view()),
