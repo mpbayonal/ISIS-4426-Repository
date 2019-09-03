@@ -78,13 +78,22 @@ class Customers(TemplateView):
 
 
 @csrf_exempt
-def get_data(request, urlLink):
+def get_proyectos_Url(request, urlLink):
 
     if request.method == 'GET':
 
         user = UserCustom.objects.get(url = urlLink)
         data = Proyecto.objects.filter(empresa_id= user.id)
         serializer = ProyectoSerializer(data, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+def get_diseno_proyecto(request, proyecto_id):
+
+    if request.method == 'GET':
+
+        proyecto = Proyecto.objects.get(id = proyecto_id)
+        data = Diseno.objects.filter(proyecto_id= proyecto.id)
+        serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
 
