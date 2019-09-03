@@ -21,8 +21,6 @@ class DisenoSerializer(serializers.ModelSerializer):
 
 class DisenoSinDetallesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Diseno
-        email = serializers.EmailField()
-        content = serializers.CharField(max_length=200)
-        created = serializers.DateTimeField()
-
+        class Meta:
+            model = UserCustom
+            fields = ['fecha', 'urlArchivo', 'proyecto']
