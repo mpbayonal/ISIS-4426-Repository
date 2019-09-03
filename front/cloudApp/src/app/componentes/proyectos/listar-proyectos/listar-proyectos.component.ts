@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProyectoService } from 'src/app/servicios/proyecto/proyecto.service';
 import { PageEvent } from '@angular/material/paginator';
+import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 
 @Component({
   selector: 'app-listar-proyectos',
@@ -9,13 +10,22 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class ListarProyectosComponent implements OnInit {
 
+  public isLogged= false;
   proyectos: any = [];
-  constructor(private proyectosService: ProyectoService) { }
+  constructor(private proyectosService: ProyectoService, private usuarioService: UsuarioService) { }
 
   page_size: number = 1;
   page_number: number =1 ;
 
+  chequearLogin(){
+    if(this.usuarioService.getToken()){
+      this.isLogged=true;
+    }else{
+      this.isLogged=false;
+    }
+  }
   ngOnInit() {
+    this.chequearLogin();
     this.proyectosService.getProyectos().subscribe(
       res =>{
         this.proyectos=res

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 import { Router } from '@angular/router';
-import {Location} from '@angular/common'
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-navegacion',
@@ -15,9 +15,8 @@ export class NavegacionComponent implements OnInit {
 
   logOut(): void{
     this.usuarioService.logoutUser();
-    this.router.navigate(['/']);
+    
     location.reload();
-
   }
   chequearLogin(){
     if(this.usuarioService.getToken()){
@@ -28,6 +27,9 @@ export class NavegacionComponent implements OnInit {
   }
   ngOnInit() {
     this.chequearLogin();
+  }
+  listarProyectos(){
+    this.router.navigate(['empresa/'+ localStorage.getItem("usuario")+ '/proyectos'])
   }
 
 }

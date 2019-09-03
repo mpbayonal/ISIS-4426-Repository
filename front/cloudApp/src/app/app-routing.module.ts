@@ -11,6 +11,8 @@ import {EditarProyectosComponent} from './componentes/proyectos/editar-proyectos
 import {AgregarDisenoComponent} from './componentes/diseños/agregar-diseno/agregar-diseno.component';
 import {ConfirmarEnvioComponent} from './componentes/diseños/confirmar-envio/confirmar-envio.component';
 import { AuthGuard } from './guards/auth.guard';
+import {NoGuardGuard} from './guards/no-guard.guard';
+
 
 const routes: Routes = [
   {
@@ -21,13 +23,15 @@ const routes: Routes = [
   {
     path: 'signin',
     component: LoginComponent,
+    canActivate: [NoGuardGuard]
   },
   {
     path: 'signup',
-    component: SignupComponent
+    component: SignupComponent,
+    canActivate: [NoGuardGuard]
   },
   {
-    path:'empresa/proyectos',
+    path:'empresa/:url/proyectos',
     component: ListarProyectosComponent
   },
   {

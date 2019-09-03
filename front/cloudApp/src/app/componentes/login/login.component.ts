@@ -18,34 +18,29 @@ export class LoginComponent implements OnInit {
     email: "",
     password: ""
   }
-  createUsuario ={
-    username: "",
-    email: "",
-    password1: "",
-    password2: ""
+  
 
+  setUsuario(){
+    localStorage.setItem("usuario", this.usuario.username);
   }
-
+  getUsuario(){
+    return localStorage.getItem("usuario")
+  }
   login(){
     this.usuarioService.loginUsuario(this.usuario).subscribe(
       data=>{
         
         let token = data
         this.usuarioService.setToken(token)
-        this.router.navigate(['empresa/proyectos']);
+        this.setUsuario();
+        this.router.navigate( ['empresa/'+ this.usuario.username +'/proyectos']);
         location.reload();
       }, err => console.log(err)
     )
   }
 
   
-  signup(){
-    this.usuarioService.signUpUsuario(this.createUsuario).subscribe(
-      res=>{
-        console.log(res)
-      }, err => console.log(err)
-    )
-  }
+  
   ngOnInit() {
 
   }

@@ -14,13 +14,13 @@
                 </div>
                     
                     <div class="card-body" >
-                    <a class="btn btn-success m-2"  routerLink="/empresa/proyectos/idProyecto/diseños" >
+                    <a class="btn btn-success m-2"  *ngIf="isLogged" routerLink="/empresa/proyectos/idProyecto/diseños" >
                         Ver Proyecto (diseños)
                     </a>
-                    <a class="btn btn-danger " >
+                    <a class="btn btn-danger " *ngIf="isLogged">
                         Eliminar Proyecto
                     </a>
-                    <a class="btn btn-secondary m-2" routerLink="/empresa/proyectos/idProyecto/editar" >
+                    <a class="btn btn-secondary m-2" *ngIf="isLogged" routerLink="/empresa/proyectos/idProyecto/editar" >
                         Editar Proyecto
                     </a>
                     <hr>
@@ -38,7 +38,7 @@
    </mat-paginator>
     <hr>
     <div class="box-footer clearfix">
-                <a class="btn btn-sm btn-info btn-flat pull-left" routerLink="/empresa/proyectos/agregar" >Agregar Proyecto</a>
+                <a class="btn btn-sm btn-info btn-flat pull-left" routerLink="/empresa/proyectos/agregar" *ngIf="isLogged">Agregar Proyecto</a>
     </div>
 
 </div>

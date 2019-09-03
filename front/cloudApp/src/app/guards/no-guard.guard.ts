@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import {CanActivate, Router} from '@angular/router'
+import { CanActivate, Router } from '@angular/router';
 import {UsuarioService} from '../servicios/usuario/usuario.service'
+
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class NoGuardGuard implements CanActivate {
   constructor(private usuarioService: UsuarioService, private router: Router){}
+  canActivate() {
 
-  canActivate(){
-    
-    if(this.usuarioService.getToken()!=null){
+    if(this.usuarioService.getToken()==null){
       
       return true
     }
     else{
-      this.router.navigate(['signin'])
+      this.router.navigate(['empresa/'+ localStorage.getItem("usuario")+ '/proyectos'])
       return false
     }
   }

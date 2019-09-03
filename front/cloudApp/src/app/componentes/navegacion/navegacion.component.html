@@ -17,7 +17,7 @@
                         <a class="nav-link" routerLink="/signup" routerLinkActive="active" *ngIf="!isLogged">SignUp</a>
                     </li>
                     <li class="nav-item">
-                            <a class="nav-link" routerLink="/empresa/proyectos" *ngIf="isLogged">proyectos</a>
+                            <a class="nav-link" (click)="listarProyectos()" *ngIf="isLogged">proyectos</a>
                     </li>
                     <li class="nav-item">
                             <a class="nav-link" (click)="logOut()" *ngIf="isLogged">LogOut</a>
