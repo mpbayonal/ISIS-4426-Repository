@@ -26,7 +26,7 @@ export class ListarProyectosComponent implements OnInit {
   }
   ngOnInit() {
     this.chequearLogin();
-    this.proyectosService.getProyectos().subscribe(
+    this.proyectosService.getProyectos(localStorage.getItem("usuario")).subscribe(
       res =>{
         this.proyectos=res
       }, err => console.log(err)

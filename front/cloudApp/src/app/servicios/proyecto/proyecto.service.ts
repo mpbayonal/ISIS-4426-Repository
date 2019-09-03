@@ -10,7 +10,16 @@ export class ProyectoService {
   constructor(private http: HttpClient) { }
 
 
-  getProyectos(){
-    return this.http.get(`${this.API_URI}/getdata`)
+  getProyectos(empresa: string){
+    return this.http.get(`${this.API_URI}/proyecto/${empresa}`);
+  }
+  agregarProyecto(proyecto){
+    return this.http.post(`${this.API_URI}/proyecto/`, proyecto);
+  }
+  editarProyecto(proyecto, idProyecto){
+    return this.http.put(`${this.API_URI}/proyecto/${idProyecto}`, proyecto);
+  }
+  eliminarProyecto(idProyecto){
+    return this.http.delete(`${this.API_URI}/proyecto/${idProyecto}`);
   }
 }

@@ -35,7 +35,7 @@ const routes: Routes = [
     component: ListarProyectosComponent
   },
   {
-    path:'empresa/proyectos/idProyecto/diseños',
+    path:'empresa/:url/proyectos/idProyecto/diseños',
     component: ListarDisenosComponent
   },{
     path: 'empresa/proyectos/idProyecto/editar',
@@ -43,7 +43,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'empresa/proyectos/agregar',
+    path: 'empresa/:url/proyectos/agregar',
     component: AgregarProyectoComponent,
     canActivate: [AuthGuard]
   },
