@@ -57,8 +57,8 @@ from PIL import ImageDraw
 class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
     queryset = Diseno.objects.all()
     serializer_class = DisenoSerializer()
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class HomePageView(TemplateView):
@@ -95,6 +95,17 @@ def get_diseno_proyecto(request, proyecto_id):
         data = Diseno.objects.filter(proyecto_id= proyecto.id)
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+def get_url_email(request, pUsername):
+
+    if request.method == 'GET':
+        user = UserCustom.objects.get(username = pUsername)
+        user.url = user.username + "" + str(user.id)
+        user.save()
+        serializer = UserCustomURLSerializer(user, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
+
 
 
 @csrf_exempt
