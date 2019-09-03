@@ -111,8 +111,12 @@ WSGI_APPLICATION = 'back.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'designmatch',
+        'USER': 'designmatch',
+        'PASSWORD': 'Segur@12',
+        'HOST': '172.24.42.30',
+        'PORT': '',
     }
 }
 
@@ -161,3 +165,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+
+
+BROKER_URL = 'redis://172.24.42.30:16379'
+CELERY_RESULT_BACKEND = 'redis://172.24.42.30:16379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Bogota'
