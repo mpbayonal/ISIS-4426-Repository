@@ -14,7 +14,7 @@
                 </div>
                     
                     <div class="card-body" >
-                    <a class="btn btn-success m-2"  *ngIf="isLogged" routerLink="/empresa/proyectos/idProyecto/diseños" >
+                    <a class="btn btn-success m-2"  *ngIf="isLogged" (click)="mostrarDisenos(proyecto.id)">
                         Ver Proyecto (diseños)
                     </a>
                     <a class="btn btn-danger " *ngIf="isLogged" (click)="eliminarProyecto(proyecto.id)">

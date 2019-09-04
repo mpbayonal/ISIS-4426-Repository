@@ -6,23 +6,21 @@
                     <form>
                         <div class="form-group">
                             <label>Nombres</label>
-                            <input type="text" class="form-control" name="nombres" placeholder="Nombres" autofocus>
+                            <input type="text" [(ngModel)]="diseno.nombre" [ngModelOptions]="{standalone: true}" class="form-control" name="nombres" placeholder="Nombres" autofocus required>
                         </div>
-                        <div class="form-group">
-                            <label>Apellidos</label>
-                            <input type="text" class="form-control" name="apellidos" placeholder="Apellidos">
-                        </div>
+        
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Email">
+                            <input type="email" [(ngModel)]="diseno.email"  [ngModelOptions]="{standalone: true}" class="form-control" name="email" placeholder="Email">
                         </div>
                         <div class="form-group">
                             <label>Precio Solicitado</label>
-                            <input type="text" class="form-control" name="precioSolicitado" placeholder="Precio Solicitado">
+                            <input type="text" class="form-control" [(ngModel)]="diseno.pago"  [ngModelOptions]="{standalone: true}"
+                            name="precioSolicitado" placeholder="Precio Solicitado">
                         </div>
                         <div class="form-group">
                                 <label>Diseño </label>
-                                <input type="file" >
+                                <input type="file" (change)=" cargarImagen($event.target.files)" accept="image/*" >
                         </div>
 
                         <div class="form-group">

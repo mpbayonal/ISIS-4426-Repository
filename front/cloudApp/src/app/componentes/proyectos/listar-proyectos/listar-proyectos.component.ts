@@ -3,7 +3,7 @@ import { ProyectoService } from 'src/app/servicios/proyecto/proyecto.service';
 import { PageEvent } from '@angular/material/paginator';
 import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {Location} from '@angular/common';
+
 
 @Component({
   selector: 'app-listar-proyectos',
@@ -62,6 +62,9 @@ export class ListarProyectosComponent implements OnInit {
   }
   formularioEditar(id){
     this.router.navigate(["empresa/proyectos/"+ id+ "/editar"])
+  }
+  mostrarDisenos(id){
+    this.router.navigate(["empresa/proyectos/"+ id + "/disenos"])
   }
 
 }
