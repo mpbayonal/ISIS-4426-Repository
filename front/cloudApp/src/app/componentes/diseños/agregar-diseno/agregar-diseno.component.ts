@@ -13,6 +13,7 @@ export class AgregarDisenoComponent implements OnInit {
 
   diseno = {
     nombre: '',
+    apellido: '',
     email: '',
     estado: false,
     fecha: new Date(),
@@ -33,7 +34,7 @@ export class AgregarDisenoComponent implements OnInit {
     )
   }
   cargarImagen(event){
-    this.selectedFile= <File>event.target.files[0];
+    this.selectedFile= <File> event.target.files[0];
   }
 
   ngOnInit() {

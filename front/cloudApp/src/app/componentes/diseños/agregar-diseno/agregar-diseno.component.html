@@ -8,23 +8,27 @@
                             <label>Nombres</label>
                             <input type="text" [(ngModel)]="diseno.nombre" [ngModelOptions]="{standalone: true}" class="form-control" name="nombres" placeholder="Nombres" autofocus required>
                         </div>
+                        <div class="form-group">
+                            <label>Apellidos</label>
+                            <input type="text" [(ngModel)]="diseno.apellido" [ngModelOptions]="{standalone: true}" class="form-control" name="apellidos" placeholder="Apellidos" autofocus required>
+                        </div>
         
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" [(ngModel)]="diseno.email"  [ngModelOptions]="{standalone: true}" class="form-control" name="email" placeholder="Email">
+                            <input type="email" [(ngModel)]="diseno.email"  [ngModelOptions]="{standalone: true}" class="form-control" name="email" placeholder="Email" required>
                         </div>
                         <div class="form-group">
                             <label>Precio Solicitado</label>
                             <input type="text" class="form-control" [(ngModel)]="diseno.pago"  [ngModelOptions]="{standalone: true}"
-                            name="precioSolicitado" placeholder="Precio Solicitado">
+                            name="precioSolicitado" placeholder="Precio Solicitado" required>
                         </div>
                         <div class="form-group">
                                 <label>Diseño </label>
-                                <input type="file" (change)=" cargarImagen($event.target.files)" accept="image/*" >
+                                <input type="file" (change)=" cargarImagen($event)" accept="image/*" required >
                         </div>
 
                         <div class="form-group">
-                            <button class="btn btn-success btn-block" routerLink="/empresa/proyecto/idProyecto/diseños/agregarDiseño/mensaje">
+                            <button class="btn btn-success btn-block" (click)="agregarDiseno()">
                                 Enviar Diseño
                             </button>
                         </div>

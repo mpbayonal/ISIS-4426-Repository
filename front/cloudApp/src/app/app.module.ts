@@ -22,6 +22,7 @@ import {ProyectoService} from './servicios/proyecto/proyecto.service';
 import {HttpClientModule} from '@angular/common/http';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { VerDisenoComponent } from './componentes/diseños/ver-diseno/ver-diseno.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AgregarProyectoComponent,
     AgregarDisenoComponent,
     ConfirmarEnvioComponent,
-    PaginatePipe
+    PaginatePipe,
+    VerDisenoComponent
   ],
   imports: [
     BrowserModule,

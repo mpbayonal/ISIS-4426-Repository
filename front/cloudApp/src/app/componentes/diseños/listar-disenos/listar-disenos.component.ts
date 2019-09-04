@@ -26,4 +26,7 @@ export class ListarDisenosComponent implements OnInit {
   formularioAgregarDiseno(){
     this.router.navigate(["empresa/proyectos/"+ this.rutaActiva.snapshot.params.idProyecto +"/disenos/agregarDiseno"])
   }
+  detalleDisenos(id){
+    this.router.navigate(["empresa/proyectos/diseños/"+id])
+  }
 }
