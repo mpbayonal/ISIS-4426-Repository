@@ -85,7 +85,7 @@ def get_proyectos_Url(request, urlLink):
         serializer = ProyectoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-
+@csrf_exempt
 def get_diseno_proyecto(request, proyecto_id):
 
     if request.method == 'GET':
@@ -95,6 +95,7 @@ def get_diseno_proyecto(request, proyecto_id):
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+@csrf_exempt
 def get_diseno_proyecto_Sin_Detalles(request, proyecto_id):
 
     if request.method == 'GET':
@@ -104,6 +105,7 @@ def get_diseno_proyecto_Sin_Detalles(request, proyecto_id):
         serializer = DisenoSinDetallesSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+@csrf_exempt
 def get_url_email(request, pUsername):
 
     if request.method == 'GET':
