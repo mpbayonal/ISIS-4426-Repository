@@ -42,7 +42,7 @@ for row in result:
     img = Image.open(url_archivo, "r")
     img.thumbnail((800, 600), Image.ANTIALIAS)
     draw = ImageDraw.Draw(img)
-    draw.text((0, 0), "{0} {1}".format(nombre, apellido), (255, 255, 255))
+    draw.text((0, 0), "{0} {1}".format(nombre, apellido), (0, 0, 0))
     nombre_nuevo = url_archivo.split(".", 1)[0]+"_modificado."+url_archivo.split(".", 1)[1]
     img.save(nombre_nuevo)
 
