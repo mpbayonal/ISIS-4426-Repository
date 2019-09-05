@@ -43,9 +43,11 @@ for row in result:
     img.thumbnail(800, 600, Image.ANTIALIAS)
     draw = ImageDraw.Draw(img)
     draw.text((0, 0), "{0} {1}".format(nombre, apellido), (255, 255, 255))
-    img.save(url_archivo.split(".", 1)[
-             0]+"_modificado."+url_archivo.split(".", 1)[1])
+    nombre_nuevo = url_archivo.split(".", 1)[0]+"_modificado."+url_archivo.split(".", 1)[1]
+    img.save(nombre_nuevo)
     serializer = DiseñoSerializer(data, many=False)
 
     cursor.execute("UPDATE backApp_disenos set estado = %s where id = %s", ("Disponible", id_diseno))
+    connection.commit()
+    cursor.execute("UPDATE backApp_disenos set url_archivo_modificado = %s where id = %s", (nombre_nuevo, id_diseno))
     connection.commit()

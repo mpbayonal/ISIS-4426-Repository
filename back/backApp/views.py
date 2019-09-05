@@ -105,10 +105,11 @@ def get_diseno_proyecto(request, proyecto_id):
             proyecto_id= proyecto.id).filter(
                 estado="Disponible")  
         for diseno in data:
-            with open(diseno.url_archivo, 'rb') as fi:
+            with open(diseno.url_archivo_modificado, 'rb') as fi:
                 encoded_string = base64.b64encode(image_file.read())
                 print(encoded_string)
-                diseno.imagen = encoded_string
+                diseno.base64 = encoded_string
+                diseno.save()
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
