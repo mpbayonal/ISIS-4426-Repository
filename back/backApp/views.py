@@ -38,6 +38,12 @@ class ListProyecto(generics.ListCreateAPIView):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
 
+    def create(self, request, *args, **kwargs): # don't need to `self.request` since `request` is available as a parameter.
+        serializer = self.serializer_class(request.data)
+        data = serializer.data
+        os.mkdir(data['nombre'])
+        return JsonResponse(serializer.data, safe=False)
+
 
 
 class DetailProyecto(generics.RetrieveUpdateDestroyAPIView):
