@@ -15,7 +15,7 @@ export class VerDisenoComponent implements OnInit {
   public isLogged= false;
   diseno: any;
   constructor(private disenoService: DiseñoService,private activated : ActivatedRoute, private usuarioService: UsuarioService,
-    private sanitizer:DomSanitizer) { }
+    public sanitizer:DomSanitizer) { }
 
   chequearLogin(){
     if(this.usuarioService.getToken()){
