@@ -31,7 +31,7 @@ export class AgregarDisenoComponent implements OnInit {
     fd.append('estado', this.diseno.estado ? 'Disponible' : 'No Procesado');
     fd.append('fecha', this.diseno.fecha.toDateString());
     fd.append('pago', this.diseno.pago);
-    fd.append('location', this.diseno.proyecto);
+    fd.append('proyecto', this.diseno.proyecto);
     this.disenoService.createDiseno(fd).subscribe(
       res => {
         this.router.navigate(['empresa/proyectos/' + this.activated.snapshot.params.idProyecto + '/disenos'])

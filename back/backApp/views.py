@@ -145,13 +145,11 @@ def send_diseno(request):
         proyecto = Proyecto.objects.get(id = data['proyecto'])
         file_name = "{0}/{1}_{2}".format(str(proyecto.nombre), data['nombre']+data['apellido'],input_image.name)
         #file_name = "{0}".format(input_image.name)
-        print(file_name)
         nuevoDiseño = Diseno(
             nombre=data['nombre'],
             apellido=data['apellido'],
             email=data['email'],
             estado=data['estado'],
-            fecha=data['fecha'],
             pago=data['pago'],
             proyecto=proyecto,
             url_archivo=file_name

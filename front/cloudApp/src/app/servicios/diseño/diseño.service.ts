@@ -13,7 +13,7 @@ export class DiseñoService {
     return this.http.get(`${this.API_URI}/disenos/${proyecto}`);
   }
   createDiseno(diseno){
-    return this.http.post(`${this.API_URI}/disenos/`, diseno)
+    return this.http.post(`${this.API_URI}/diseno/`, diseno)
   }
   getDisenoId(id){
     return this.http.get(`${this.API_URI}/diseno/${id}`);

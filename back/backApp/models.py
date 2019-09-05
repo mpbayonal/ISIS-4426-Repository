@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+import datetime
 
 class UserCustom(AbstractUser):
 
@@ -38,7 +39,7 @@ class Diseno(models.Model):
     apellido = models.CharField(max_length=500)
     email = models.CharField(max_length=500)
     estado = models.CharField(max_length=500)
-    fecha = models.DateTimeField()
+    fecha = models.DateTimeField(default=datetime.datetime.utcnow)
     pago = models.IntegerField()
     url_archivo = models.CharField(max_length=500)
     proyecto = models.ForeignKey( Proyecto, on_delete = models.CASCADE)
