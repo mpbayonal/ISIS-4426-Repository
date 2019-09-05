@@ -104,15 +104,15 @@ def get_diseno_proyecto(request, proyecto_id):
         data = Diseno.objects.filter(
             proyecto_id= proyecto.id).filter(
                 estado="Disponible")  
-        for diseno in data:
-            with open(diseno.url_archivo_modificado, 'rb') as image_file:
-                encoded_string = base64.b64encode(image_file.read())
-                diseno.base64_modificado = encoded_string
-                diseno.save()
-            with open(diseno.url_archivo, 'rb') as image_file:
-                encoded_string = base64.b64encode(image_file.read())
-                diseno.base64 = encoded_string
-                diseno.save()
+        # for diseno in data:
+        #     with open(diseno.url_archivo_modificado, 'rb') as image_file:
+        #         encoded_string = base64.b64encode(image_file.read())
+        #         diseno.base64_modificado = encoded_string
+        #         diseno.save()
+        #     with open(diseno.url_archivo, 'rb') as image_file:
+        #         encoded_string = base64.b64encode(image_file.read())
+        #         diseno.base64 = encoded_string
+        #         diseno.save()
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 

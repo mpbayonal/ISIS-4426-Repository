@@ -3,6 +3,9 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 import psycopg2
+import datetime
+
+start = datetime.datetime.utcnow()
 
 query = 'select \
         nombre,\
@@ -50,3 +53,6 @@ for row in result:
     connection.commit()
     cursor.execute('UPDATE "backApp_diseno" set url_archivo_modificado = %s where id = %s', (nombre_nuevo, id_diseno))
     connection.commit()
+
+end = datetime.datetime.utcnow()
+print((b-a).total_seconds())
