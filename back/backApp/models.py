@@ -43,7 +43,7 @@ class Diseno(models.Model):
     pago = models.IntegerField()
     url_archivo = models.CharField(max_length=500)
     url_archivo_modificado = models.CharField(max_length=500, null=True)
-    base64 = models.CharField(max_length=500000, null=True)
+    base64 = models.CharField(max_length=10485750, null=True)
     base64_modificado = models.CharField(max_length=500000, null=True)
     proyecto = models.ForeignKey( Proyecto, on_delete = models.CASCADE)
 
