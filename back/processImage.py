@@ -4,7 +4,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 import psycopg2
 
-query = "select \
+query = 'select \
         nombre,\
         email,\
         estado,\
@@ -13,16 +13,15 @@ query = "select \
         url_archivo,\
         apellido,\
         proyecto_id,\
-        id
+        id \
     from \
-        backApp_disenos d \
+        "backApp_diseno"  b\
     where \
-        d.estado = 'No Procesado'"
+        b.estado = \'No Procesado\''
 
 connection = psycopg2.connect(user="designmatch",
                                 password="Segur@12",
                                 host="172.24.42.30",
-                                port="5932",
                                 database='designmatch')
 
 cursor = connection.cursor()
