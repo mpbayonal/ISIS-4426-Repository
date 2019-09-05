@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DiseñoService } from 'src/app/servicios/diseño/diseño.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-ver-diseno',
@@ -12,7 +14,8 @@ export class VerDisenoComponent implements OnInit {
 
   public isLogged= false;
   diseno: any;
-  constructor(private disenoService: DiseñoService,private activated : ActivatedRoute, private usuarioService: UsuarioService) { }
+  constructor(private disenoService: DiseñoService,private activated : ActivatedRoute, private usuarioService: UsuarioService,
+    private sanitizer:DomSanitizer) { }
 
   chequearLogin(){
     if(this.usuarioService.getToken()){
@@ -30,7 +33,11 @@ export class VerDisenoComponent implements OnInit {
       }, err => console.log(err)
     )
 
+   
     
+  }
+  imagenes(img){
+    this.sanitizer.bypassSecurityTrustResourceUrl(img)
   }
 
 }
