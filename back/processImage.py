@@ -40,14 +40,13 @@ for row in result:
     id_diseno = row[8]
 
     img = Image.open(url_archivo, "r")
-    img.thumbnail(800, 600, Image.ANTIALIAS)
+    img.thumbnail((800, 600), Image.ANTIALIAS)
     draw = ImageDraw.Draw(img)
     draw.text((0, 0), "{0} {1}".format(nombre, apellido), (255, 255, 255))
     nombre_nuevo = url_archivo.split(".", 1)[0]+"_modificado."+url_archivo.split(".", 1)[1]
     img.save(nombre_nuevo)
-    serializer = DiseñoSerializer(data, many=False)
 
-    cursor.execute("UPDATE backApp_disenos set estado = %s where id = %s", ("Disponible", id_diseno))
+    cursor.execute('UPDATE "backApp_diseno" set estado = %s where id = %s', ("Disponible", id_diseno))
     connection.commit()
-    cursor.execute("UPDATE backApp_disenos set url_archivo_modificado = %s where id = %s", (nombre_nuevo, id_diseno))
+    cursor.execute('UPDATE "backApp_diseno" set url_archivo_modificado = %s where id = %s', (nombre_nuevo, id_diseno))
     connection.commit()
