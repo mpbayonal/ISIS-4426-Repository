@@ -39,6 +39,7 @@ export class ListarProyectosComponent implements OnInit {
       this.proyectosService.getProyectos(this.rutaActiva.snapshot.params.url).subscribe(
         res => {
           this.proyectos = res
+          console.log(this.proyectos)
         }, err => console.log(err)
       )
       

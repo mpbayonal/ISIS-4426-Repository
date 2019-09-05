@@ -29,6 +29,10 @@ from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
+import base64
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 class ListProyecto(generics.ListCreateAPIView):
     queryset = Proyecto.objects.all()
@@ -91,7 +95,14 @@ def get_diseno_proyecto(request, proyecto_id):
     if request.method == 'GET':
 
         proyecto = Proyecto.objects.get(id = proyecto_id)
-        data = Diseno.objects.filter(proyecto_id= proyecto.id)
+        data = Diseno.objects.filter(
+            proyecto_id= proyecto.id).filter(
+                estado="Disponible")  
+        for diseno in data:
+            with open(diseno.url_archivo, 'rb') as fi:
+                encoded_string = base64.b64encode(image_file.read())
+                print(encoded_string)
+                diseno.imagen = encoded_string
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -119,22 +130,41 @@ def get_url_email(request, pUsername):
 
 
 @csrf_exempt
-def image(request):
-    proyecto = Proyecto.objects.all().first()
-    data = Diseno(fecha=datetime.datetime.utcnow)
-    data.nombre = "test user"
-    data.email = "test@user.com"
-    data.estado = "No Procesado"
-    data.fecha = datetime.datetime.utcnow()
-    data.pago = "2500"
-    data.urlArchivo = "./image.png"
-    data.proyecto = proyecto
-    if request.method == 'GET':
-        img = Image.open(os.path.dirname(os.path.realpath(__file__)) + '\\image.png', "r")
-        draw = ImageDraw.Draw(img)
-        # font = ImageFont.truetype(<font-file>, <font-size>)
-        # draw.text((x, y),"Sample Text",(r,g,b))
-        draw.text((0, 0), "Hola Mundo", (255, 255, 255))
-        img.save('sample-out.png')
-        serializer = DisenoSerializer(data, many=False)
+def send_diseno(request):
+
+    if request.method == 'POST':
+        data = request.POST
+        files = request.FILES
+        input_image = files['image']
+        proyecto = Proyecto.objects.get(id = data['proyecto'])
+        # file_name = "{0}/{1}.{2}".format(str(proyecto.nombre), input_image.name,get_file_extension(input_image.name))
+        file_name = "{0}".format(input_image.name)
+        print(file_name)
+        nuevoDiseño = Diseno(
+            nombre=data['nombre'],
+            apellido=data['apellido'],
+            email=data['email'],
+            estado=data['estado'],
+            fecha=data['fecha'],
+            pago=data['pago'],
+            proyecto=proyecto,
+            url_archivo=file_name
+        )
+        nuevoDiseño.save()
+        with open(file_name, 'wb+') as destination:
+            for chunk in input_image.chunks():
+                destination.write(chunk)
+        serializer = DisenoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           get_file_extension(filename) in ALLOWED_EXTENSIONS
+
+
+def get_file_extension(filename):
+    return filename.rsplit('.', 1)[1].lower()
+
+
+def get_content_encoding(filename):
+    return 'image/jpeg' if get_file_extension(filename) in ['jpg', 'jpeg'] else 'image/png'

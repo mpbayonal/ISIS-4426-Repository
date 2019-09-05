@@ -10,23 +10,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ListarDisenosComponent implements OnInit {
 
   disenos: any = [];
- 
- 
-  constructor(private diseñosService: DiseñoService,private rutaActiva: ActivatedRoute, private router: Router ) { }
 
-  
+
+  constructor(private diseñosService: DiseñoService, private rutaActiva: ActivatedRoute, private router: Router) { }
+
+
   ngOnInit() {
     this.diseñosService.getDisenos(this.rutaActiva.snapshot.params.idProyecto).subscribe(
-      res=>{
-        this.disenos=res;
+      res => {
+        console.log(res)
+        this.disenos = res;
       }, err => console.log(err)
     )
   }
 
-  formularioAgregarDiseno(){
-    this.router.navigate(["empresa/proyectos/"+ this.rutaActiva.snapshot.params.idProyecto +"/disenos/agregarDiseno"])
+  formularioAgregarDiseno() {
+    this.router.navigate(["empresa/proyectos/" + this.rutaActiva.snapshot.params.idProyecto + "/disenos/agregarDiseno"])
   }
-  detalleDisenos(id){
-    this.router.navigate(["empresa/proyectos/diseños/"+id])
+  detalleDisenos(id) {
+    this.router.navigate(["empresa/proyectos/diseños/" + id])
   }
 }

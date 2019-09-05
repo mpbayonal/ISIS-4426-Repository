@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { DiseñoService } from 'src/app/servicios/diseño/diseño.service';
 
 @Component({
@@ -18,23 +18,28 @@ export class AgregarDisenoComponent implements OnInit {
     estado: false,
     fecha: new Date(),
     pago: '',
-    urlArchivo: null,
     proyecto: this.activated.snapshot.params.idProyecto
   }
 
-  selectedFile : File= null;
-  agregarDiseno(){
-    const fd= new FormData();
-    fd.append('image', this.selectedFile, this.selectedFile.name)
-    this.diseno.urlArchivo= fd;
-    this.disenoService.createDiseno(this.diseno).subscribe(
-      res=>{
-        this.router.navigate(["empresa/proyectos/"+this.activated.snapshot.params.idProyecto+"/disenos"])
+  selectedFile: File = null;
+  agregarDiseno() {
+    const fd = new FormData();
+    fd.append('image', this.selectedFile, this.selectedFile.name);
+    fd.append('nombre', this.diseno.nombre);
+    fd.append('apellido', this.diseno.apellido);
+    fd.append('email', this.diseno.email);
+    fd.append('estado', this.diseno.estado ? 'Disponible' : 'No Procesado');
+    fd.append('fecha', this.diseno.fecha.toDateString());
+    fd.append('pago', this.diseno.pago);
+    fd.append('location', this.diseno.proyecto);
+    this.disenoService.createDiseno(fd).subscribe(
+      res => {
+        this.router.navigate(['empresa/proyectos/' + this.activated.snapshot.params.idProyecto + '/disenos'])
       }, err => console.log(err)
     )
   }
-  cargarImagen(event){
-    this.selectedFile= <File> event.target.files[0];
+  cargarImagen(event) {
+    this.selectedFile = <File>event.target.files[0];
   }
 
   ngOnInit() {

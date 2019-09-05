@@ -14,6 +14,7 @@ export class NoGuardGuard implements CanActivate {
       return true
     }
     else{
+      console.log(localStorage.getItem('url'))
       this.router.navigate(['empresa/'+ localStorage.getItem("url")+ '/proyectos'])
       return false
     }

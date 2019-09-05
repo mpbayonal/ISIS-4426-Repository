@@ -37,10 +37,10 @@ class Diseno(models.Model):
     nombre = models.CharField(max_length=500)
     apellido = models.CharField(max_length=500)
     email = models.CharField(max_length=500)
-    estado = models.BooleanField()
+    estado = models.CharField(max_length=500)
     fecha = models.DateTimeField()
     pago = models.IntegerField()
-    urlArchivo = models.CharField(max_length=500)
+    url_archivo = models.CharField(max_length=500)
     proyecto = models.ForeignKey( Proyecto, on_delete = models.CASCADE)
 
     def __str__(self):

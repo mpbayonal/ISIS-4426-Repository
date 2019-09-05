@@ -24,7 +24,7 @@
                         Editar Proyecto
                     </a>
                     
-                    <a class="btn btn-success m-2" routerLink="/empresa/proyectos/idProyecto/diseños/agregarDiseño" *ngIf="!isLogged" >
+                    <a class="btn btn-success m-2" [routerLink]="'/empresa/proyectos/' + proyecto.id + '/disenos/agregarDiseno/'"  *ngIf="!isLogged" >
                         Agregar Diseño
                     </a>
                 </div>

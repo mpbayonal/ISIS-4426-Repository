@@ -19,12 +19,11 @@ urlpatterns = [
     path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
     path('disenos/', views.ListDiseno.as_view()),
     path('diseno/<int:pk>/', views.DetailDiseno.as_view()),
+    path('diseno/', views.send_diseno),
 
     path('auth/', include('rest_auth.urls')),
     path('auth/signup/', include('rest_auth.registration.urls')),
 
-
-    path(r'image', views.image),
 
     # url(r'^login/', views.login),
     # url(r'^&', views.index),
