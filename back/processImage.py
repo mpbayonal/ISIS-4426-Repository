@@ -40,11 +40,11 @@ for row in result:
     id_diseno = row[8]
 
     img = Image.open(url_archivo, "r")
-    img.thumbnail((800, 600), Image.ANTIALIAS)
+    img = img.thumbnail((800, 600), Image.ANTIALIAS)
     draw = ImageDraw.Draw(img)
     draw.text((0, 0), "{0} {1}".format(nombre, apellido), (0, 0, 0))
     nombre_nuevo = url_archivo.split(".", 1)[0]+"_modificado."+url_archivo.split(".", 1)[1]
-    img.save(nombre_nuevo)
+    draw.save(nombre_nuevo)
 
     cursor.execute('UPDATE "backApp_diseno" set estado = %s where id = %s', ("Disponible", id_diseno))
     connection.commit()
