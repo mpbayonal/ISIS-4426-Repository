@@ -19,6 +19,11 @@
             </div>
         </div>
     </div>
+    <mat-paginator [length]="disenos.length"
+              [pageSize]="page_size"
+              
+              (page)="handlePage($event)">
+   </mat-paginator>
     <hr>
     <div class="box-footer clearfix">
         <a class="btn btn-sm btn-info btn-flat pull-left" (click)="formularioAgregarDiseno()">Agregar Diseño</a>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DiseñoService } from 'src/app/servicios/diseño/diseño.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-disenos',
@@ -11,7 +12,8 @@ export class ListarDisenosComponent implements OnInit {
 
   disenos: any = [];
 
-
+  page_size: number = 10;
+  page_number: number = 1;
   constructor(private diseñosService: DiseñoService, private rutaActiva: ActivatedRoute, private router: Router) { }
 
 
@@ -29,5 +31,9 @@ export class ListarDisenosComponent implements OnInit {
   }
   detalleDisenos(id) {
     this.router.navigate(["empresa/proyectos/diseños/" + id])
+  }
+  handlePage(e: PageEvent) {
+    this.page_size = e.pageSize
+    this.page_number = e.pageIndex + 1
   }
 }
