@@ -3,6 +3,7 @@ import { ProyectoService } from 'src/app/servicios/proyecto/proyecto.service';
 import { PageEvent } from '@angular/material/paginator';
 import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class ListarProyectosComponent implements OnInit {
 
   public isLogged = false;
   proyectos: any = [];
-  constructor(private proyectosService: ProyectoService, private usuarioService: UsuarioService, private rutaActiva: ActivatedRoute
+  constructor(private proyectosService: ProyectoService, private usuarioService: UsuarioService, 
+    private rutaActiva: ActivatedRoute, private flashMessagesService: FlashMessagesService
     , private router : Router) { }
 
   page_size: number = 10;
@@ -55,8 +57,10 @@ export class ListarProyectosComponent implements OnInit {
   eliminarProyecto(id){
     this.proyectosService.eliminarProyecto(id).subscribe(
       res=>{
-        this.router.navigate(["empresa/"+ localStorage.getItem("url") +"/proyectos/"])
+        this.flashMessagesService.show('proyecto eliminado exitosamente', { cssClass: 'alert-success', timeout: 6000 });
         location.reload()
+        this.router.navigate(["empresa/"+ localStorage.getItem("url") +"/proyectos/"])
+        
       },
       err=> console.log(err)
     )
