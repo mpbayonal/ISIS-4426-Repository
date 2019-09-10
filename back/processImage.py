@@ -55,4 +55,4 @@ for row in result:
     connection.commit()
 
 end = datetime.datetime.utcnow()
-print((b-a).total_seconds())
+print((end-start).total_seconds())

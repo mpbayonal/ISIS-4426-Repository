@@ -39,8 +39,11 @@ class ListProyecto(generics.ListCreateAPIView):
     serializer_class = ProyectoSerializer
 
     def create(self, request, *args, **kwargs): # don't need to `self.request` since `request` is available as a parameter.
+        print(request.data)
         serializer = self.serializer_class(request.data)
+        print(serializer)
         data = serializer.data
+        
         os.mkdir(data['nombre'])
         return JsonResponse(serializer.data, safe=False)
 
@@ -104,15 +107,15 @@ def get_diseno_proyecto(request, proyecto_id):
         data = Diseno.objects.filter(
             proyecto_id= proyecto.id).filter(
                 estado="Disponible")  
-        # for diseno in data:
-        #     with open(diseno.url_archivo_modificado, 'rb') as image_file:
-        #         encoded_string = base64.b64encode(image_file.read())
-        #         diseno.base64_modificado = encoded_string
-        #         diseno.save()
-        #     with open(diseno.url_archivo, 'rb') as image_file:
-        #         encoded_string = base64.b64encode(image_file.read())
-        #         diseno.base64 = encoded_string
-        #         diseno.save()
+        for diseno in data:
+            with open(diseno.url_archivo_modificado, 'rb') as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+                diseno.base64_modificado = encoded_string
+                diseno.save()
+            with open(diseno.url_archivo, 'rb') as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+                diseno.base64 = encoded_string
+                diseno.save()
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -164,6 +167,27 @@ def send_diseno(request):
                 destination.write(chunk)
         serializer = DisenoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def send_proyecto(request, id_empresa):
+
+    if request.method == 'POST':
+        data = request
+        body_unicode = request.body.decode('utf-8')
+        proyecto = UserCustom.objects.get(id = id_empresa)
+        body = json.loads(body_unicode)
+        print(body)
+        os.mkdir(body['nombre'])
+        nuevoDiseño = Proyecto(
+            nombre=body['nombre'],
+            pago=body['pago'],
+            empresa=proyecto,
+            descripcion=body['descripcion']
+        )
+        nuevoDiseño.save()
+        serializer = ProyectoSerializer(nuevoDiseño, many=False)
+        return JsonResponse(serializer.data, safe=False)
+        
 
 def allowed_file(filename):
     return '.' in filename and \
