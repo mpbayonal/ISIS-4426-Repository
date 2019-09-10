@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 import { Router } from '@angular/router';
-import {Location} from '@angular/common'
+import {Location} from '@angular/common';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,8 @@ import {Location} from '@angular/common'
 export class LoginComponent implements OnInit {
 
 
-  constructor(private usuarioService: UsuarioService, private router:Router, private location: Location) { }
+  constructor(private usuarioService: UsuarioService, private router:Router, private location: Location,
+    private flashMessagesService: FlashMessagesService) { }
 
   usuario  = {
     username: "",
@@ -42,7 +44,10 @@ export class LoginComponent implements OnInit {
         this.setUsuario();
         this.router.navigate(['empresa/'+ localStorage.getItem("url")+ '/proyectos'])
         location.reload();
-      }, err => console.log(err)
+        this.flashMessagesService.show('Inició Sesión exitosamente', { cssClass: 'alert-success', timeout: 6000 });
+      }, err => {
+        this.flashMessagesService.show('Contraseña, email o username incorrecto', { cssClass: 'alert-danger', timeout: 6000 })
+      }
     )
   }
 
