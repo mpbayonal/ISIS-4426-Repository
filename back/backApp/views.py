@@ -150,7 +150,7 @@ def send_diseno(request):
         files = request.FILES
         input_image = files['image']
         proyecto = Proyecto.objects.get(id = data['proyecto'])
-        file_name = "{0}/{1}_{2}".format(str(proyecto.nombre), data['nombre']+data['apellido'],input_image.name)
+        file_name = "{0}/{1}/{2}_{3}".format('staticfiles',str(proyecto.nombre), data['nombre']+data['apellido'],input_image.name)
         #file_name = "{0}".format(input_image.name)
         nuevoDiseño = Diseno(
             nombre=data['nombre'],
@@ -177,7 +177,8 @@ def send_proyecto(request, id_empresa):
         proyecto = UserCustom.objects.get(id = id_empresa)
         body = json.loads(body_unicode)
         print(body)
-        os.mkdir(body['nombre'])
+	
+        os.mkdir('staticfiles/' + body['nombre'])
         nuevoDiseño = Proyecto(
             nombre=body['nombre'],
             pago=body['pago'],
