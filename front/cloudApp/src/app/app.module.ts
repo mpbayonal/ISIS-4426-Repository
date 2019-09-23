@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
+import {FlashMessagesModule} from 'angular2-flash-messages';
 
 
 import { AppComponent } from './app.component';
@@ -47,7 +48,8 @@ import { VerDisenoComponent } from './componentes/diseños/ver-diseno/ver-diseno
     HttpClientModule,
     MatPaginatorModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    FlashMessagesModule.forRoot()
   ],
   providers: [ProyectoService],
   bootstrap: [AppComponent]

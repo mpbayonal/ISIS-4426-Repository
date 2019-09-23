@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProyectoService } from 'src/app/servicios/proyecto/proyecto.service';
-import {Router} from '@angular/router'
+import {Router} from '@angular/router';
+import {FlashMessagesService} from 'angular2-flash-messages';
 
 
 @Component({
@@ -10,7 +11,8 @@ import {Router} from '@angular/router'
 })
 export class AgregarProyectoComponent implements OnInit {
 
-  constructor(private proyectoService: ProyectoService, private router: Router) { }
+  constructor(private proyectoService: ProyectoService, private router: Router,
+    private flashMessagesService: FlashMessagesService) { }
 
   proyecto = {
     nombre: '',
@@ -19,8 +21,9 @@ export class AgregarProyectoComponent implements OnInit {
     empresa: localStorage.getItem("id")
   }
   agregarProyecto(){
-    this.proyectoService.agregarProyecto(this.proyecto).subscribe(
+    this.proyectoService.agregarProyecto(this.proyecto, localStorage.getItem("id")).subscribe(
       res=>{
+        this.flashMessagesService.show('proyecto agregado exitosamente', { cssClass: 'alert-success', timeout: 6000 });
         this.router.navigate( ['empresa/'+localStorage.getItem("url") +'/proyectos']);
       },
       err=> console.log(err)
