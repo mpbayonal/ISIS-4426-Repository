@@ -5,6 +5,7 @@ import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 
+
 @Component({
   selector: 'app-ver-diseno',
   templateUrl: './ver-diseno.component.html',

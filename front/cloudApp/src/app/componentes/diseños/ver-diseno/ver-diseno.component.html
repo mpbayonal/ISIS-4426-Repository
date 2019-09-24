@@ -22,11 +22,11 @@
                         </div>
                         <div class="form-group" *ngIf="isLogged">
                             <label> Original</label>
-                                <img [src]= "sanitizer.bypassSecurityTrustUrl('data:image/png;base64,' + diseno?.base64.replace('b\'','').replace('\'',''))"> 
+                                <img [src]= "../../../../../../../back/back/diseno.url_archivo"> 
                         </div>
                         <div class="form-group" >
                                 <label> Modificada</label>
-                                <img [src]= "sanitizer.bypassSecurityTrustUrl('data:image/png;base64,' + diseno?.base64_modificado.replace('b\'','').replace('\'',''))"> 
+                                <img [src]= "../../../../../../../back/back/url_archivo_modificado"> 
                     </div>
                     </form>
                 </div>

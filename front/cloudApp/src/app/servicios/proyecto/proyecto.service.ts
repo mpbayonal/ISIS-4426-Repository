@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProyectoService {
 
-  API_URI = 'http://172.24.42.47:8080';
+  API_URI = 'http://localhost:8080';
   constructor(private http: HttpClient) { }
 
 
