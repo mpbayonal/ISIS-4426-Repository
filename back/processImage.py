@@ -4,6 +4,10 @@ from PIL import ImageFont
 from PIL import ImageDraw
 import psycopg2
 import datetime
+import os
+import dotenv
+
+dotenv.read_dotenv()
 
 start = datetime.datetime.utcnow()
 
@@ -13,7 +17,7 @@ query = 'select \
         estado,\
         fecha,\
         pago,\
-        url_archivo,\
+        archivo,\
         apellido,\
         proyecto_id,\
         id \
@@ -22,10 +26,10 @@ query = 'select \
     where \
         b.estado = \'No Procesado\''
 
-connection = psycopg2.connect(user="designmatch",
-                                password="Segur@12",
-                                host="172.24.42.30",
-                                database='designmatch')
+connection = psycopg2.connect(user=os.getenv('RDS_USERNAME'),
+                                password=os.getenv('RDS_PASSWORD'),
+                                host=os.getenv('RDS_HOST'),
+                                database=os.getenv('RDS_DATABASE'))
 
 cursor = connection.cursor()
 cursor.execute(query)
@@ -41,7 +45,7 @@ for row in result:
     apellido = row[6]
     proyecto_id = row[7]
     id_diseno = row[8]
-
+    print(url_archivo)
     img = Image.open(url_archivo, "r")
     img.thumbnail((800, 600), Image.ANTIALIAS)
     draw = ImageDraw.Draw(img)
@@ -49,9 +53,7 @@ for row in result:
     nombre_nuevo = url_archivo.split(".", 1)[0]+"_modificado."+url_archivo.split(".", 1)[1]
     img.save(nombre_nuevo)
 
-    cursor.execute('UPDATE "backApp_diseno" set estado = %s where id = %s', ("Disponible", id_diseno))
-    connection.commit()
-    cursor.execute('UPDATE "backApp_diseno" set url_archivo_modificado = %s where id = %s', (nombre_nuevo, id_diseno))
+    cursor.execute('UPDATE "backApp_diseno" set estado = %s, url_archivo_modificado = %s where id = %s', ("Disponible", nombre_nuevo, id_diseno))
     connection.commit()
 
 end = datetime.datetime.utcnow()

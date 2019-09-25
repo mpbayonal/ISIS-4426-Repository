@@ -21,5 +21,5 @@ class DisenoSerializer(serializers.ModelSerializer):
 
 class DisenoSinDetallesSerializer(serializers.ModelSerializer):
     class Meta:
-            model = UserCustom
-            fields = ['fecha', 'url_archivo', 'proyecto']
+        model = Diseno
+        fields = '__all__'
