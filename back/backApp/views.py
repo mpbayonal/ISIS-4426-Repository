@@ -18,6 +18,8 @@ from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
+from .tasks import process_image_and_send_mail
+
 from . import serializers
 from .models import *
 from .serializers import *
@@ -105,6 +107,7 @@ def send_diseno(request):
         )
         nuevoDiseño.save()
         serializer = DisenoSerializer(nuevoDiseño, many=False)
+        process_image_and_send_mail.delay(nuevoDiseño.id)
         return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt

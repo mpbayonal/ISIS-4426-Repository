@@ -42,7 +42,7 @@ class Diseno(models.Model):
     fecha = models.DateTimeField(default=datetime.datetime.utcnow)
     pago = models.IntegerField()
     archivo = models.ImageField(upload_to='noProcesadas')
-    url_archivo_modificado = models.CharField(max_length=500, null=True)
+    url_archivo_modificado = models.ImageField(upload_to='disponibles', null=True)
     proyecto = models.ForeignKey( Proyecto, on_delete = models.CASCADE)
 
     def __str__(self):
