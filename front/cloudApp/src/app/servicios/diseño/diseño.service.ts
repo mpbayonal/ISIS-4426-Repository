@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DiseñoService {
 
-  API_URI = 'http://localhost:8080';
+  API_URI = 'http://localhost:8000';
   constructor(private http: HttpClient) { }
 
   getDisenos(proyecto){

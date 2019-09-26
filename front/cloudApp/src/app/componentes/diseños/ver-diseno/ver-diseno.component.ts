@@ -15,6 +15,7 @@ export class VerDisenoComponent implements OnInit {
 
   public isLogged= false;
   diseno: any;
+  urlD: any; 
   constructor(private disenoService: DiseñoService,private activated : ActivatedRoute, private usuarioService: UsuarioService,
     public sanitizer:DomSanitizer) { }
 
@@ -30,7 +31,9 @@ export class VerDisenoComponent implements OnInit {
     this.chequearLogin();
     this.disenoService.getDisenoId(this.activated.snapshot.params.idDiseño).subscribe(
       res=>{
+        this.urlD= "../../../../../../../back/";
         this.diseno= res;
+        console.log(res)
       }, err => console.log(err)
     )
 
