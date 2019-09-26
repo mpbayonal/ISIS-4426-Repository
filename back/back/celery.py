@@ -8,7 +8,8 @@ import dotenv
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'back.settings')
-dotenv.read_dotenv()
+env_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), '.env')
+dotenv.read_dotenv(env_file)
 app = Celery('back')
 
 # Using a string here means the worker will not have to
