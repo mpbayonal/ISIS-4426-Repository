@@ -25,10 +25,13 @@ SECRET_KEY = 'wkh=zq6&pj86b1y4t4njw-hv!$^24x_^g4h&c*2sw38@3y5avz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["172.24.42.47", "127.0.0.1", "localhost","54.186.204.111"]
+ALLOWED_HOSTS = ['*']
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.getenv('FILES')
+MEDIA_URL = os.getenv('FILES_URL')
 
 CORS_ORIGIN_ALLOW_ALL=True
 # Extra places for collectstatic to find static files.
@@ -109,15 +112,15 @@ WSGI_APPLICATION = 'back.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databasess
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'designmatch',
-        'USER': 'designmatch',
-        'PASSWORD': 'Segur@12',
-        'HOST': '172.24.42.30',
+        'NAME': os.getenv('RDS_DATABASE'),
+        'USER': os.getenv('RDS_USERNAME'),
+        'PASSWORD': os.getenv('RDS_PASSWORD'),
+        'HOST': os.getenv('RDS_HOST'),
         'PORT': '',
     }
 }
@@ -169,8 +172,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 
-BROKER_URL = 'redis://172.24.42.30:16379'
-CELERY_RESULT_BACKEND = 'redis://172.24.42.30:16379'
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

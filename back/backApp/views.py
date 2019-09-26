@@ -1,52 +1,39 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+import base64
+import os
+from datetime import datetime
 
-from django.shortcuts import render
-
-# Create your views here.
-from .models import *
-from .serializers import *
-from rest_framework import generics
-from . import serializers
+import pytz
+from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import *
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
+from rest_framework import generics, permissions, serializers, viewsets
+from rest_framework.authentication import (BasicAuthentication,
+                                           SessionAuthentication)
 from rest_framework.decorators import api_view
+from rest_framework.permissions import *
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.utils import json
-from rest_framework import serializers
-from rest_framework import viewsets
-from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-import datetime
-import os 
-from django.views.generic import TemplateView
-
 from rest_framework.views import APIView
-from rest_framework.response import Response
 
-from django.views.decorators.csrf import csrf_exempt
-from django.core.paginator import Paginator
+from .tasks import process_image_and_send_mail
 
-import base64
+from . import serializers
+from .models import *
+from .serializers import *
 
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 class ListProyecto(generics.ListCreateAPIView):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
 
-    def create(self, request, *args, **kwargs): # don't need to `self.request` since `request` is available as a parameter.
-        print(request.data)
-        serializer = self.serializer_class(request.data)
-        print(serializer)
-        data = serializer.data
-        
-        os.mkdir(data['nombre'])
-        return JsonResponse(serializer.data, safe=False)
-
+    # def create(self, request, *args, **kwargs): # don't need to `self.request` since `request` is available as a parameter.
+    #     serializer = self.serializer_class(request.data)
+    #     data = serializer.data
+    #     os.mkdir(data['nombre'])
+    #     return JsonResponse(serializer.data, safe=False)
 
 
 class DetailProyecto(generics.RetrieveUpdateDestroyAPIView):
@@ -58,34 +45,12 @@ class ListDiseno(generics.ListCreateAPIView):
     queryset = Diseno.objects.all()
     serializer_class = DisenoSerializer
 
+
 class DetailDiseno(generics.RetrieveUpdateDestroyAPIView):
     queryset = Diseno.objects.all()
     serializer_class = DisenoSerializer
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = (IsAuthenticatedOrReadOnly,)
-
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-
-
-
-
-
-class HomePageView(TemplateView):
-    def get(self, request, **kwargs):
-        return render(request, 'index.html', context=None)
-
-
-class LinksPageView(TemplateView):
-    def get(self, request, **kwargs):
-        return render(request, 'links.html', context=None)
-
-
-class Customers(TemplateView):
-    def getCust(request):
-        name = 'liran'
-        return HttpResponse('{ "name":"' + name + '", "age":31, "city":"New York" }')
 
 
 @csrf_exempt
@@ -98,6 +63,7 @@ def get_proyectos_Url(request, urlLink):
         serializer = ProyectoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+
 @csrf_exempt
 def get_diseno_proyecto(request, proyecto_id):
 
@@ -106,19 +72,10 @@ def get_diseno_proyecto(request, proyecto_id):
         proyecto = Proyecto.objects.get(id = proyecto_id)
         data = Diseno.objects.filter(
             proyecto_id= proyecto.id).filter(
-                estado="Disponible")     
+                estado="Disponible")  
         serializer = DisenoSerializer(data, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-@csrf_exempt
-def get_diseno_proyecto_Sin_Detalles(request, proyecto_id):
-
-    if request.method == 'GET':
-
-        proyecto = Proyecto.objects.get(id = proyecto_id)
-        data = Diseno.objects.filter(proyecto_id= proyecto.id)
-        serializer = DisenoSinDetallesSerializer(data, many=True)
-        return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
 def get_url_email(request, pUsername):
@@ -131,8 +88,6 @@ def get_url_email(request, pUsername):
         return JsonResponse(serializer.data, safe=False)
 
 
-
-
 @csrf_exempt
 def send_diseno(request):
 
@@ -141,8 +96,6 @@ def send_diseno(request):
         files = request.FILES
         input_image = files['image']
         proyecto = Proyecto.objects.get(id = data['proyecto'])
-        file_name = "{0}/{1}/{2}_{3}".format('staticfiles',str(proyecto.nombre), data['nombre']+data['apellido'],input_image.name)
-        #file_name = "{0}".format(input_image.name)
         nuevoDiseño = Diseno(
             nombre=data['nombre'],
             apellido=data['apellido'],
@@ -150,12 +103,9 @@ def send_diseno(request):
             estado=data['estado'],
             pago=data['pago'],
             proyecto=proyecto,
-            url_archivo=file_name
+            archivo=input_image
         )
         nuevoDiseño.save()
-        with open(file_name, 'wb+') as destination:
-            for chunk in input_image.chunks():
-                destination.write(chunk)
         serializer = DisenoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
 
@@ -179,16 +129,3 @@ def send_proyecto(request, id_empresa):
         nuevoDiseño.save()
         serializer = ProyectoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
-        
-
-def allowed_file(filename):
-    return '.' in filename and \
-           get_file_extension(filename) in ALLOWED_EXTENSIONS
-
-
-def get_file_extension(filename):
-    return filename.rsplit('.', 1)[1].lower()
-
-
-def get_content_encoding(filename):
-    return 'image/jpeg' if get_file_extension(filename) in ['jpg', 'jpeg'] else 'image/png'
