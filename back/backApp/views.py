@@ -107,7 +107,6 @@ def send_diseno(request):
         )
         nuevoDiseño.save()
         serializer = DisenoSerializer(nuevoDiseño, many=False)
-        process_image_and_send_mail.delay(nuevoDiseño.id)
         return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt

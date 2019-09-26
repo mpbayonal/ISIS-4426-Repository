@@ -1,4 +1,5 @@
-from celery.decorators import task
+from celery.task.schedules import crontab
+from celery.decorators import periodic_task
 from celery.utils.log import get_task_logger
 
 from PIL import Image
@@ -11,8 +12,11 @@ from boto3 import client
 
 logger = get_task_logger(__name__)
 
-
-@task(name="send_feedback_email_task")
+@periodic_task(
+    run_every=(crontab(minute='*/15')),
+    name="send_feedback_email_task",
+    ignore_result=True
+)
 def process_image_and_send_mail(diseno_id):
 
     diseno = Diseno.objects.get(id=diseno_id)
