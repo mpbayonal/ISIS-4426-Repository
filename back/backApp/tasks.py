@@ -15,7 +15,7 @@ logger = get_task_logger(__name__)
 
 
 @periodic_task(
-    run_every=(crontab(minute='*/15')),
+    run_every=(crontab(minute='*/1')),
     name="send_feedback_email_task",
     ignore_result=True
 )
