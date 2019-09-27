@@ -12,7 +12,12 @@ import datetime
 
 from boto3 import client
 
+import io
+
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 logger = get_task_logger(__name__)
+
 
 @periodic_task(
     run_every=(crontab(minute='*/15')),
@@ -31,10 +36,11 @@ def process_image_and_send_mail():
         draw = ImageDraw.Draw(img)
         draw.text((0, 580), "{0} {1}".format(
             diseno.nombre, diseno.apellido), (0, 0, 0))
-        nombre_nuevo = url_archivo.split(
-            ".", 1)[0]+"_modificado."+url_archivo.split(".", 1)[1]
-        img.save(nombre_nuevo)
-        diseno.url_archivo_modificado = diseno.archivo
+        tempfile_io = io.BytesIO()
+        tempfile.save(tempfile_io, format='JPEG')
+        image_file = InMemoryUploadedFile(
+            tempfile_io, None, diseno.archivo.name, 'image/jpeg', tempfile_io.len, None)
+        diseno.url_archivo_modificado.save(diseno.archivo.name, image_file)
         diseno.save()
 
         connection = client(
