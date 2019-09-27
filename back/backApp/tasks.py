@@ -39,7 +39,7 @@ def process_image_and_send_mail():
         tempfile_io = io.BytesIO()
         img.save(tempfile_io, format='JPEG')
         image_file = InMemoryUploadedFile(
-            tempfile_io, None, diseno.archivo.name, 'image/jpeg', tempfile_io.len, None)
+            tempfile_io, None, diseno.archivo.name, 'image/jpeg', tempfile_io.getbuffer().nbytes, None)
         diseno.url_archivo_modificado.save(diseno.archivo.name, image_file)
         diseno.save()
 
