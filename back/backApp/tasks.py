@@ -1,20 +1,15 @@
-from celery.task.schedules import crontab
-from celery.decorators import periodic_task
-from celery.utils.log import get_task_logger
-
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
-
-from .models import Diseno
-
 import datetime
+import io
+import os
 
 from boto3 import client
-
-import io
-
+from celery.decorators import periodic_task
+from celery.task.schedules import crontab
+from celery.utils.log import get_task_logger
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image, ImageDraw, ImageFont
+
+from .models import Diseno
 
 logger = get_task_logger(__name__)
 
