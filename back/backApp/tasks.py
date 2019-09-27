@@ -23,9 +23,9 @@ def process_image_and_send_mail():
 
     start = datetime.datetime.utcnow()
     disenos = Diseno.objects.filter(estado="No Procesado")
-
+    canti = 0
     for diseno in disenos:
-
+        startDiseno = datetime.datetime.utcnow()
         img = Image.open(diseno.archivo, "r")
         imgResize = img.resize((800, 600), Image.ANTIALIAS)
         draw = ImageDraw.Draw(imgResize)
@@ -64,6 +64,9 @@ def process_image_and_send_mail():
             },
             Source='je.bautista10@uniandes.edu.co',
         )
+        canti = canti + 1
+        enddiseno = datetime.datetime.utcnow()
+        print((enddiseno-startDiseno).total_seconds())
     end = datetime.datetime.utcnow()
-    print((end-start).total_seconds())
+    print(canti/60*(end-start).total_seconds())
     return (end-start).total_seconds()
