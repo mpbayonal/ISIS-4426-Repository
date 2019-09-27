@@ -37,7 +37,7 @@ def process_image_and_send_mail():
         draw.text((0, 580), "{0} {1}".format(
             diseno.nombre, diseno.apellido), (0, 0, 0))
         tempfile_io = io.BytesIO()
-        tempfile.save(tempfile_io, format='JPEG')
+        img.save(tempfile_io, format='JPEG')
         image_file = InMemoryUploadedFile(
             tempfile_io, None, diseno.archivo.name, 'image/jpeg', tempfile_io.len, None)
         diseno.url_archivo_modificado.save(diseno.archivo.name, image_file)
