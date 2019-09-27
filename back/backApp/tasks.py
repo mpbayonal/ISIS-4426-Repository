@@ -27,12 +27,12 @@ def process_image_and_send_mail():
     for diseno in disenos:
 
         img = Image.open(diseno.archivo, "r")
-        img.resize((800, 600), Image.ANTIALIAS)
-        draw = ImageDraw.Draw(img)
+        imgResize = img.resize((800, 600), Image.ANTIALIAS)
+        draw = ImageDraw.Draw(imgResize)
         draw.text((0, 580), "{0} {1}".format(
             diseno.nombre, diseno.apellido), (0, 0, 0))
         tempfile_io = io.BytesIO()
-        img.save(tempfile_io, format='JPEG')
+        imgResize.save(tempfile_io, format='JPEG')
         image_file = InMemoryUploadedFile(
             tempfile_io, None, diseno.archivo.name, 'image/jpeg', tempfile_io.getbuffer().nbytes, None)
         diseno.url_archivo_modificado.save(diseno.archivo.name, image_file)
