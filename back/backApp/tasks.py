@@ -36,6 +36,7 @@ def process_image_and_send_mail():
         image_file = InMemoryUploadedFile(
             tempfile_io, None, diseno.archivo.name, 'image/jpeg', tempfile_io.getbuffer().nbytes, None)
         diseno.url_archivo_modificado.save(diseno.archivo.name, image_file)
+        diseno.estado = "Disponible"
         diseno.save()
 
         connection = client(
