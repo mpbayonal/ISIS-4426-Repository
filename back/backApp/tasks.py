@@ -27,7 +27,7 @@ def process_image_and_send_mail():
     for diseno in disenos:
 
         img = Image.open(diseno.archivo, "r")
-        img.thumbnail((800, 600), Image.ANTIALIAS)
+        img.resize((800, 600), Image.ANTIALIAS)
         draw = ImageDraw.Draw(img)
         draw.text((0, 580), "{0} {1}".format(
             diseno.nombre, diseno.apellido), (0, 0, 0))
