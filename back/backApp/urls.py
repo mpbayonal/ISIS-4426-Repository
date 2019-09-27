@@ -2,6 +2,8 @@ from django.conf.urls import *
 from django.views.decorators.csrf import csrf_exempt
 from . import views
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from rest_framework import routers
 
@@ -9,8 +11,6 @@ router = routers.DefaultRouter()
 
 
 urlpatterns = [
-
-
 
     path('proyecto/<urlLink>/', views.get_proyectos_Url),
     path('user/<pUsername>/', views.get_url_email),
