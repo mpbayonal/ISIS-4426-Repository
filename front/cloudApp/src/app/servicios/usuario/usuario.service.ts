@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class UsuarioService {
 
-  API_URI = 'http://localhost:8000';
+  API_URI = 'http://54.175.1.161/api';
   constructor(private http: HttpClient, private router: Router) { }
 
   getUrl(username){
