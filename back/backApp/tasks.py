@@ -22,7 +22,7 @@ logger = get_task_logger(__name__)
 def process_image_and_send_mail():
 
     start = datetime.datetime.utcnow()
-    disenos = Diseno.objects.filter(estado="No Procesada")
+    disenos = Diseno.objects.filter(estado="No Procesado")
 
     for diseno in disenos:
 
