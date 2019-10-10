@@ -1,0 +1,10 @@
+.env
+venv/
+*.pyc
+__pycache__
+.idea
+.vscode
+celerybeat-schedule.db
+celerybeat.pid
+node_modules/
+dist/
