@@ -1,44 +1,43 @@
 <div class="container p-4">
-    <div class="row">
-        <div class="col-md-6 p-4" *ngFor="let proyecto of proyectos | paginate: page_size:page_number" >
-            <div class="card text-center  " id="proyectosCard" >
-                <div class="card-header bg-dark text-white"  >
-                    <a >
-                        <h3 class="card-title text-uppercase">
-                            {{proyecto.nombre}}
-                        </h3>
-                    </a>
-                    
-                    <p class="m-2"> Descripcion: {{proyecto.descripcion}} </p>
-                    <p class="m-2"> Valor estimado: ${{proyecto.pago}} </p>
-                </div>
-                    
-                    <div class="card-body" >
-                    <a class="btn btn-success m-2"  *ngIf="isLogged" (click)="mostrarDisenos(proyecto.id)">
-                        Ver Proyecto (diseños)
-                    </a>
-                    <a class="btn btn-danger " *ngIf="isLogged" (click)="eliminarProyecto(proyecto.id)">
-                        Eliminar Proyecto
-                    </a>
-                    <a class="btn btn-secondary m-2" *ngIf="isLogged" (click)="formularioEditar(proyecto.id)" >
-                        Editar Proyecto
-                    </a>
-                    
-                    <a class="btn btn-success m-2" [routerLink]="'/empresa/proyectos/' + proyecto.id + '/disenos/agregarDiseno/'"  *ngIf="!isLogged" >
-                        Agregar Diseño
-                    </a>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-md-6 p-4" *ngFor="let proyecto of proyectos | paginate: page_size:page_number">
+      <div class="card text-center  " id="proyectosCard">
+        <div class="card-header bg-dark text-white">
+          <a>
+            <h3 class="card-title text-uppercase">
+              {{proyecto.nombre}}
+            </h3>
+          </a>
+
+          <p class="m-2"> Descripcion: {{proyecto.descripcion}} </p>
+          <p class="m-2"> Valor estimado: ${{proyecto.pago}} </p>
         </div>
+
+        <div class="card-body">
+          <a class="btn btn-success m-2" *ngIf="isLogged" (click)="mostrarDisenos(proyecto.id)">
+            Ver Proyecto (diseños)
+          </a>
+          <a class="btn btn-danger " *ngIf="isLogged" (click)="eliminarProyecto(proyecto.id)">
+            Eliminar Proyecto
+          </a>
+          <a class="btn btn-secondary m-2" *ngIf="isLogged" (click)="formularioEditar(proyecto.id)">
+            Editar Proyecto
+          </a>
+
+          <a class="btn btn-success m-2" [routerLink]="'/empresa/proyectos/' + proyecto.id + '/disenos/agregarDiseno/'"
+            *ngIf="!isLogged">
+            Agregar Diseño
+          </a>
+        </div>
+      </div>
     </div>
-    <mat-paginator [length]="proyectos.length"
-              [pageSize]="page_size"
-              
-              (page)="handlePage($event)">
-   </mat-paginator>
-    <hr>
-    <div class="box-footer clearfix">
-                <a class="btn btn-sm btn-info btn-flat pull-left" (click)="formularioAgregar()" *ngIf="isLogged">Agregar Proyecto</a>
-    </div>
+  </div>
+  <mat-paginator [length]="proyectos.length" [pageSize]="page_size" (page)="handlePage($event)">
+  </mat-paginator>
+  <hr>
+  <div class="box-footer clearfix">
+    <a class="btn btn-sm btn-info btn-flat pull-left" (click)="formularioAgregar()" *ngIf="isLogged">Agregar
+      Proyecto</a>
+  </div>
 
 </div>

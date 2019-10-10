@@ -6,15 +6,15 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class PaginatePipe implements PipeTransform {
 
- 
-  transform(array: any[], page_size : number , page_number:number): any[] {
-    if(!array.length) return [];
-    
-    page_size= page_size ||5 
-    page_number= page_number || 1
-    --page_number
 
-    return array.slice(page_number * page_size, (page_number+1) * page_size)
+  transform(array: any[], pageSize: number, pageNumber: number): any[] {
+    if (!array.length) { return []; }
+
+    pageSize = pageSize || 5;
+    pageNumber = pageNumber || 1;
+    --pageNumber;
+
+    return array.slice(pageNumber * pageSize, (pageNumber + 1) * pageNumber);
 
   }
 

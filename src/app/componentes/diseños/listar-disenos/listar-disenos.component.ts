@@ -12,28 +12,32 @@ export class ListarDisenosComponent implements OnInit {
 
   disenos: any = [];
 
-  page_size: number = 10;
-  page_number: number = 1;
-  constructor(private diseñosService: DiseñoService, private rutaActiva: ActivatedRoute, private router: Router) { }
+  pageSize = 10;
+  pageNumber = 1;
+  constructor(
+    private diseñosService: DiseñoService,
+    private rutaActiva: ActivatedRoute,
+    private router: Router
+  ) { }
 
 
   ngOnInit() {
     this.diseñosService.getDisenos(this.rutaActiva.snapshot.params.idProyecto).subscribe(
       res => {
-        console.log(res)
+        console.log(res);
         this.disenos = res;
       }, err => console.log(err)
-    )
+    );
   }
 
   formularioAgregarDiseno() {
-    this.router.navigate(["empresa/proyectos/" + this.rutaActiva.snapshot.params.idProyecto + "/disenos/agregarDiseno"])
+    this.router.navigate(['empresa/proyectos/' + this.rutaActiva.snapshot.params.idProyecto + '/disenos/agregarDiseno']);
   }
   detalleDisenos(id) {
-    this.router.navigate(["empresa/proyectos/diseños/" + id])
+    this.router.navigate(['empresa/proyectos/diseños/' + id]);
   }
   handlePage(e: PageEvent) {
-    this.page_size = e.pageSize
-    this.page_number = e.pageIndex + 1
+    this.pageSize = e.pageSize;
+    this.pageNumber = e.pageIndex + 1;
   }
 }
