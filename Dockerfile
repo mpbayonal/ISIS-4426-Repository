@@ -1,10 +1,16 @@
 FROM python:3.6
+ENV PYTHONUNBUFFERED=1
+ENV C_FORCE_ROOT=1
 
-WORKDIR /home/api
+RUN mkdir /app
+WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY . .
+RUN cd back
+RUN ls -lrt
+
 RUN pip install -r requirements.txt
-RUN pip install gunicorn
 
+EXPOSE 8000
 
-ENTRYPOINT ["gunicorn", "-b", ":8080", "--access-logfile", "-", "--error-logfile", "-", "back.wsgi:application"]
+RUN entry.sh
