@@ -18,7 +18,6 @@ from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
-from ..back.celery import app
 from . import serializers
 from .models import *
 from .serializers import *
@@ -106,7 +105,7 @@ def send_diseno(request):
             archivo=input_image
         )
         nuevoDiseño.save()
-        app.send_task("send_feedback_email_task", kwargs=dict(id=nuevoDiseño.id))
+        process_image_and_send_mail.delay(nuevoDiseño.id)
         serializer = DisenoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
 

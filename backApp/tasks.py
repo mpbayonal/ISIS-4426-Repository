@@ -9,13 +9,12 @@ from celery.utils.log import get_task_logger
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image, ImageDraw, ImageFont
 
-from ..back.celery import app
 from .models import Diseno
 
 logger = get_task_logger(__name__)
 
 
-@app.task(
+@task(
     name="send_feedback_email_task",
     ignore_result=True
 )
