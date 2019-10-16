@@ -18,8 +18,8 @@ logger = get_task_logger(__name__)
     name="send_feedback_email_task",
     ignore_result=True
 )
-def process_image_and_send_mail():
-
+def process_image_and_send_mail(id):
+    
     start = datetime.datetime.utcnow()
     disenos = Diseno.objects.filter(estado="No Procesado")
     canti = 0
