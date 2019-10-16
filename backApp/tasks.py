@@ -3,7 +3,7 @@ import io
 import os
 
 from boto3 import client
-from celery.decorators import periodic_task
+from celery.decorators import task
 from celery.task.schedules import crontab
 from celery.utils.log import get_task_logger
 from django.core.files.uploadedfile import InMemoryUploadedFile
