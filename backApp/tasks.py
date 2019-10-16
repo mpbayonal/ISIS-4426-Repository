@@ -14,8 +14,7 @@ from .models import Diseno
 logger = get_task_logger(__name__)
 
 
-@periodic_task(
-    run_every=(crontab(minute='*/1')),
+@task(
     name="send_feedback_email_task",
     ignore_result=True
 )
@@ -29,8 +28,8 @@ def process_image_and_send_mail():
         img = Image.open(diseno.archivo, "r")
         imgResize = img.resize((800, 600), Image.ANTIALIAS)
         draw = ImageDraw.Draw(imgResize)
-        draw.text((0, 580), "{0} {1}".format(
-            diseno.nombre, diseno.apellido), (0, 0, 0))
+        draw.text((0, 580), "{0} {1} - {2}".format(
+            diseno.nombre, diseno.apellido, diseno.fecha), (0, 0, 0))
         tempfile_io = io.BytesIO()
         imgResize.save(tempfile_io, format='JPEG')
         image_file = InMemoryUploadedFile(
