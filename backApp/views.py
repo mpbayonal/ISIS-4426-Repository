@@ -18,11 +18,10 @@ from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
-from .tasks import process_image_and_send_mail
-
 from . import serializers
 from .models import *
 from .serializers import *
+from .tasks import process_image_and_send_mail
 
 
 class ListProyecto(generics.ListCreateAPIView):
@@ -106,6 +105,7 @@ def send_diseno(request):
             archivo=input_image
         )
         nuevoDiseño.save()
+        process_image_and_send_mail.delay(nuevoDiseño.id)
         serializer = DisenoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
 
@@ -117,9 +117,7 @@ def send_proyecto(request, id_empresa):
         body_unicode = request.body.decode('utf-8')
         proyecto = UserCustom.objects.get(id = id_empresa)
         body = json.loads(body_unicode)
-        print(body)
 	
-        os.mkdir('staticfiles/' + body['nombre'])
         nuevoDiseño = Proyecto(
             nombre=body['nombre'],
             pago=body['pago'],
