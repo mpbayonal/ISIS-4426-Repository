@@ -3,7 +3,7 @@ import io
 import os
 
 from boto3 import client
-from celery.decorators import periodic_task
+from celery.decorators import task
 from celery.task.schedules import crontab
 from celery.utils.log import get_task_logger
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -14,15 +14,14 @@ from .models import Diseno
 logger = get_task_logger(__name__)
 
 
-@periodic_task(
-    run_every=(crontab(minute='*/1')),
+@task(
     name="send_feedback_email_task",
     ignore_result=True
 )
-def process_image_and_send_mail():
+def process_image_and_send_mail(id):
 
     start = datetime.datetime.utcnow()
-    disenos = Diseno.objects.filter(estado="No Procesado")
+    disenos = Diseno.objects.filter(id=id)
     canti = 0
     for diseno in disenos:
         startDiseno = datetime.datetime.utcnow()

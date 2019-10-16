@@ -106,6 +106,7 @@ def send_diseno(request):
             archivo=input_image
         )
         nuevoDiseño.save()
+        app.send_task("send_feedback_email_task", kwargs=dict(id=nuevoDiseño.id))
         serializer = DisenoSerializer(nuevoDiseño, many=False)
         return JsonResponse(serializer.data, safe=False)
 
@@ -117,9 +118,7 @@ def send_proyecto(request, id_empresa):
         body_unicode = request.body.decode('utf-8')
         proyecto = UserCustom.objects.get(id = id_empresa)
         body = json.loads(body_unicode)
-        print(body)
 	
-        os.mkdir('staticfiles/' + body['nombre'])
         nuevoDiseño = Proyecto(
             nombre=body['nombre'],
             pago=body['pago'],
