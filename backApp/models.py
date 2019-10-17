@@ -143,7 +143,12 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
     table = dynamodb.Table(DYNAMO_DB_TABLE)
 
     DYNAMO_DB_FIELDS = [
-        'username',  'password', 'url', 'id', 'email']
+        'Username',  'Password', 'Url', 'id', 'Email']
+
+    @classmethod
+    def get_id(cls, id):
+        return cls.table.query(
+            KeyConditionExpression=Key('id').eq(id))
 
     @classmethod
     def get_email(cls, email):
@@ -152,13 +157,16 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
         )
 
     def save(self, *args, **kwargs):
+
+        idFinal = str(uuid.uuid4())
+        urlFinal = self.Username +  idFinal
         self.table.put_item(
             Item={
-                'username': self.username,
-                'password': self.password1,
-                'email': self.email,
-                'Url': self.url,
-                'id': self.id
+                'username': self.Username,
+                'password': self.Password,
+                'email': self.Email,
+                'url': urlFinal,
+                'id': idFinal
             }
         )
 

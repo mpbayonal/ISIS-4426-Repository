@@ -56,12 +56,7 @@ def getProyectoById(request, pk):
 
     return HttpResponse(data)
 
-@csrf_exempt
-def createUser(request, pk):
 
-    data = serializers.serialize("json", Proyecto.objects.filter(pk=pk))
-
-    return HttpResponse(data)
 
 
 #     path('proyectos/<int:pk>/editar/', views.editar_proyecto),
@@ -147,6 +142,7 @@ def send_diseno(request):
         files = request.FILES
         input_image = files['image']
         proyecto = Proyecto.objects.get(id = data['proyecto'])
+
         nuevoDiseño = Diseno(
             nombre=data['nombre'],
             apellido=data['apellido'],
@@ -171,15 +167,14 @@ def send_proyecto(request, id_empresa):
     if request.method == 'POST':
         data = request
         body_unicode = request.body.decode('utf-8')
-        proyecto = UserCustom.objects.get(id = id_empresa)
+        empresa = UserCustom.get_id(id_empresa)
         body = json.loads(body_unicode)
         print(body)
 
-        os.mkdir('staticfiles/' + body['nombre'])
         nuevoProyecto = Proyecto(
             nombre=body['nombre'],
             pago=body['pago'],
-            empresa=proyecto,
+            empresa=empresa,
             descripcion=body['descripcion']
         )
         nuevoProyecto.save()
@@ -206,14 +201,18 @@ def registro(request):
 
         else:
 
-            password_encrypt = bcrypt.generate_password_hash(
-                body['password1'])
+
+
+            password = body['password1']
+            b = password.encode('utf-8')  # I just added this line
+            password_encrypt = bcrypt.hashpw(b, bcrypt.gensalt())
 
             empresa = UserCustom(
-                username=body['username'],
-                password=password_encrypt,
-                email=body['email']
             )
+
+            empresa.Username = body['username']
+            empresa.Password = password_encrypt
+            empresa.Email = body['email']
             empresa.save()
 
             data = serializers.serialize("json", empresa)
