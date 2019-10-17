@@ -199,11 +199,10 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
     def save(self, *args, **kwargs):
         self.table.put_item(
             Item={
-                'Username': self.username,
-                'Password': self.password,
-                'Email': self.email,
-                'Url': self.url,
-                'id': self.id
+                'empresa': self.empresa,
+                'nombre': self.nombre,
+                'descripcion': self.descripcion,
+                'pago': self.pago
             }
         )
 
@@ -229,16 +228,15 @@ class Diseno(DynamoDBMapperMixin, models.Model):
     def __str__(self):
         return self.nombre
 
-    # def save(self, *args, **kwargs):
-    #     self.table.put_item(
-    #         Item={
-    #             'nombre': self.username,
-    #             'apellido': self.password,
-    #             'email': self.email,
-    #             'estado': self.url,
-    #             'fecha': self.id
-    #         }
-    #     )
+    def save(self, *args, **kwargs):
+        self.table.put_item(
+            Item={
+                'apellido': self.apellido,
+                'nombre': self.nombre,
+                'email': self.email,
+                'fecha': self.fecha
+            }
+        )
 
 
 
