@@ -123,7 +123,7 @@ class DynamoDBMapperMixin(object):
         self.dynamodb_table.delete_item(Key={'id': str(self.id)})
         return super(DynamoDBMapperMixin, self).delete(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
+    def update(self, *args, **kwargs):
         super(DynamoDBMapperMixin, self).save(*args, **kwargs)
 
         # Perform update item in dynamodb if needed
@@ -169,6 +169,19 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
                 'id': idFinal
             }
         )
+
+    @classmethod
+    def update(cls, email, field, value):
+        update_action = {}
+        update_action[field] = {'Value': value, 'Action': 'PUT'}
+        # Perform update item in dynamodb if needed
+        cls.table.update_item(
+            Key={'email': email},
+            AttributeUpdates=update_action
+        )
+
+
+
 
 
     # add additional fields in here

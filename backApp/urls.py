@@ -13,9 +13,8 @@ urlpatterns = [
     path('diseno/<int:pk>/', views.getDisenoById),
     path('diseno/', views.send_diseno),
     path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
-    path('auth/signup/', views.registro)
-
-    #path('auth/', include('rest_auth.urls')),
+    path('auth/signup/', views.registro),
+    path('auth/', views.login),
 
 
 ]

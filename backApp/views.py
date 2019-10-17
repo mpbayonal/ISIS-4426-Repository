@@ -1,6 +1,8 @@
 import base64
 import os
 import bcrypt
+import jwt
+import datetime
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -200,20 +202,59 @@ def registro(request):
             return HttpResponse(status=401)
 
         else:
-
-
-
             password = body['password1']
             b = password.encode('utf-8')  # I just added this line
             password_encrypt = bcrypt.hashpw(b, bcrypt.gensalt())
 
-            empresa = UserCustom(
-            )
-
+            empresa = UserCustom()
             empresa.Username = body['username']
             empresa.Password = password_encrypt
             empresa.Email = body['email']
             empresa.save()
+
+            data = serializers.serialize("json", empresa)
+            return HttpResponse(data)
+
+
+@csrf_exempt
+def login(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+
+        body = json.loads(body_unicode)
+        empresa = UserCustom.get_email(body['email'])
+
+
+        if empresa['Count'] < 1 :
+            return HttpResponse(status=404)
+
+
+        password = body['password'].encode('utf-8')
+        passwordHash = empresa['Items'][0]['password']
+        print(password)
+
+
+        if bcrypt.checkpw(password, passwordHash) == False:
+            return HttpResponse(status=401)
+
+        else:
+
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=900),
+                'iat': datetime.datetime.utcnow(),
+                'sub': empresa['Item'][0]['id']
+            }
+            token = jwt.encode(
+                payload,
+                settings.SECRET_KEY,
+                algorithm='HS256'
+            )
+
+            #payload = jwt.decode(auth_token, settings.SECRET_KEY)
+
+            UserCustom.update( empresa['Item'][0]['email'], 'token' , token )
+
+
 
             data = serializers.serialize("json", empresa)
             return HttpResponse(data)
