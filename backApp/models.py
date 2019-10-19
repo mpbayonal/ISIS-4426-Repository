@@ -9,6 +9,8 @@ from functools import partial
 from django.contrib.auth.models import AbstractUser
 from boto3.dynamodb.conditions import Key, Attr
 from django.db import models
+from django.core.files.base import File
+from django.core.files.images import ImageFile
 from django.conf import settings
 import datetime
 
@@ -229,12 +231,20 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
             }
         )
 
+    @classmethod
+    def get_id(cls, id):
+        return cls.table.query(
+            KeyConditionExpression=Key('id').eq(id))
+
+
+
+
 class Diseno(DynamoDBMapperMixin, models.Model):
 
     DYNAMO_DB_TABLE = 'designmatch-disenos'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
     DYNAMO_DB_FIELDS = [
-        'nombre', 'apellido', 'email', 'estado', 'fecha', 'pago','archivo', 'url_archivo_modificado', 'proyecto'
+        'Nombre', 'Apellido', 'Email', 'Estado', 'Fecha', 'Pago', 'Proyecto', 'id'
     ]
 
     nombre = models.CharField(max_length=500)
@@ -243,20 +253,27 @@ class Diseno(DynamoDBMapperMixin, models.Model):
     estado = models.CharField(max_length=500)
     fecha = models.DateTimeField(default=datetime.datetime.utcnow)
     pago = models.IntegerField()
-    archivo = models.ImageField(upload_to='noProcesadas')
-    url_archivo_modificado = models.ImageField(upload_to='disponibles', null=True)
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
+    #archivo = models.ImageField(upload_to='noProcesadas')
+    #url_archivo_modificado = models.ImageField(upload_to='disponibles', null=True)
+    proyecto = models.CharField(max_length=500)
+
 
     def __str__(self):
         return self.nombre
 
     def save(self, *args, **kwargs):
+        idFinal = str(uuid.uuid4())
+        fechaNow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
         self.table.put_item(
             Item={
                 'apellido': self.apellido,
                 'nombre': self.nombre,
                 'email': self.email,
-                'fecha': self.fecha
+                'estado': self.estado,
+                'pago': self.pago,
+                'proyecto': self.proyecto,
+                'fecha': fechaNow,
+                'id': idFinal
             }
         )
 

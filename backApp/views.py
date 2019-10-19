@@ -143,20 +143,27 @@ def send_diseno(request):
         data = request.POST
         files = request.FILES
         input_image = files['image']
-        proyecto = Proyecto.objects.get(id = data['proyecto'])
 
-        nuevoDiseño = Diseno(
-            nombre=data['nombre'],
-            apellido=data['apellido'],
-            email=data['email'],
-            estado=data['estado'],
-            pago=data['pago'],
-            proyecto=proyecto,
-            archivo=input_image
-        )
-        nuevoDiseño.save()
-        data = serializers.serialize("json", nuevoDiseño)
-        return HttpResponse(serializers.serialize("json" , data))
+        proyecto = Proyecto.get_id(data['proyecto'])
+
+        if proyecto['Count'] < 1 :
+            return HttpResponse(status=404)
+
+        else:
+            nuevoProyecto = Diseno()
+
+            nuevoProyecto.nombre = data['nombre']
+
+            nuevoProyecto.apellido=data['apellido']
+            nuevoProyecto.email=data['email']
+            nuevoProyecto.estado=data['estado']
+            nuevoProyecto.pago=data['pago']
+            nuevoProyecto.proyecto=data['proyecto']
+
+            nuevoProyecto.save()
+
+            data = serializers.serialize("json", nuevoProyecto)
+            return HttpResponse(serializers.serialize("json" , data))
 
 
 
