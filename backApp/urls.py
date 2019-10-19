@@ -12,7 +12,7 @@ urlpatterns = [
     path('proyectos/<int:pk>/editar/', views.editar_proyecto),
     path('diseno/<int:pk>/', views.getDisenoById),
     path('diseno/', views.send_diseno),
-    path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
+    path('proyectos/<email_empresa>/crear/', views.send_proyecto),
     path('auth/signup/', views.registro),
     path('auth/', views.login),
 

@@ -164,25 +164,32 @@ def send_diseno(request):
 #     path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
 
 @csrf_exempt
-def send_proyecto(request, id_empresa):
+def send_proyecto(request, email_empresa):
 
     if request.method == 'POST':
         data = request
         body_unicode = request.body.decode('utf-8')
-        empresa = UserCustom.get_id(id_empresa)
+        empresa = UserCustom.get_email(email_empresa)
+        print(empresa)
         body = json.loads(body_unicode)
         print(body)
 
-        nuevoProyecto = Proyecto(
-            nombre=body['nombre'],
-            pago=body['pago'],
-            empresa=empresa,
-            descripcion=body['descripcion']
-        )
-        nuevoProyecto.save()
-        data = serializers.serialize("json", nuevoProyecto)
+        if empresa['Count'] < 1 :
+            return HttpResponse(status=404)
 
-        return HttpResponse(data)
+        else:
+            id_Empresa = empresa['Items'][0]['id']
+            nuevoProyecto = Proyecto(
+            )
+            nuevoProyecto.nombre = body['nombre']
+            nuevoProyecto.empresa = id_Empresa
+            nuevoProyecto.pago = body['pago']
+            nuevoProyecto.descripcion = body['descripcion']
+
+            nuevoProyecto.save()
+            data = serializers.serialize("json", nuevoProyecto)
+
+            return HttpResponse(data)
 
 
 @csrf_exempt
@@ -193,6 +200,7 @@ def registro(request):
 
         body = json.loads(body_unicode)
         empresa = UserCustom.get_email(body['email'])
+        print(empresa)
 
         print(empresa['Count'] > 0)
         if empresa['Count'] > 0:
@@ -215,11 +223,6 @@ def registro(request):
             data = serializers.serialize("json", empresa)
             return HttpResponse(data)
 
-def bytes_to_int(bytes):
-    result = 0
-    for b in bytes:
-        result = result * 256 + int(b)
-    return result
 
 @csrf_exempt
 def login(request):
@@ -258,7 +261,6 @@ def login(request):
 
             #payload = jwt.decode(auth_token, settings.SECRET_KEY)
 
-           
 
             UserCustom.update( empresa['Items'][0]['email'], 'token' , token )
 

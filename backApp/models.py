@@ -206,10 +206,10 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
     DYNAMO_DB_TABLE = 'designmatch-proyectos'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
     DYNAMO_DB_FIELDS = [
-        'empresa', 'nombre', 'descripcion', 'pago'
+        'Empresa', 'Nombre', 'Descripcion', 'Pago', 'id'
     ]
 
-    empresa = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    empresa = models.CharField(max_length=500)
     nombre = models.CharField(max_length=500)
     descripcion = models.CharField(max_length=500)
     pago = models.IntegerField()
@@ -218,15 +218,16 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
         return self.nombre
 
     def save(self, *args, **kwargs):
+        idFinal = str(uuid.uuid4())
         self.table.put_item(
             Item={
                 'empresa': self.empresa,
                 'nombre': self.nombre,
                 'descripcion': self.descripcion,
-                'pago': self.pago
+                'pago': self.pago,
+                'id': idFinal
             }
         )
-
 
 class Diseno(DynamoDBMapperMixin, models.Model):
 
