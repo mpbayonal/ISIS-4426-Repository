@@ -215,6 +215,11 @@ def registro(request):
             data = serializers.serialize("json", empresa)
             return HttpResponse(data)
 
+def bytes_to_int(bytes):
+    result = 0
+    for b in bytes:
+        result = result * 256 + int(b)
+    return result
 
 @csrf_exempt
 def login(request):
@@ -225,13 +230,14 @@ def login(request):
         empresa = UserCustom.get_email(body['email'])
 
 
+
         if empresa['Count'] < 1 :
             return HttpResponse(status=404)
 
 
         password = body['password'].encode('utf-8')
-        passwordHash = empresa['Items'][0]['password']
-        print(password)
+
+        passwordHash = empresa['Items'][0]['password'].value
 
 
         if bcrypt.checkpw(password, passwordHash) == False:
@@ -242,7 +248,7 @@ def login(request):
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=900),
                 'iat': datetime.datetime.utcnow(),
-                'sub': empresa['Item'][0]['id']
+                'sub': empresa['Items'][0]['id']
             }
             token = jwt.encode(
                 payload,
@@ -252,7 +258,9 @@ def login(request):
 
             #payload = jwt.decode(auth_token, settings.SECRET_KEY)
 
-            UserCustom.update( empresa['Item'][0]['email'], 'token' , token )
+           
+
+            UserCustom.update( empresa['Items'][0]['email'], 'token' , token )
 
 
 
