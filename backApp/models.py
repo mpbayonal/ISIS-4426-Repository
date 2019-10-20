@@ -14,14 +14,13 @@ from django.core.files.images import ImageFile
 from django.conf import settings
 import datetime
 
-
 # Create your models here.
 dynamodb = boto3.resource(
-        'dynamodb',
-        region_name='us-east-1',
-        aws_access_key_id=settings.AWS_ACCESS_KEY,
-        aws_secret_access_key=settings.AWS_SECRET_KEY
-    )
+    'dynamodb',
+    region_name='us-east-1',
+    aws_access_key_id=settings.AWS_ACCESS_KEY,
+    aws_secret_access_key=settings.AWS_SECRET_KEY
+)
 
 
 class DynamoDBMapperMixin(object):
@@ -92,11 +91,11 @@ class DynamoDBMapperMixin(object):
         else:
             return super(DynamoDBMapperMixin, self).__delattr__(name)
 
-    def __dir__(self):
-        """
-        Overrides __dir__ for autocompletion!
-        """
-        return super(DynamoDBMapperMixin, self).__dir__() + self.DYNAMO_DB_FIELDS
+    # def __dir__(self):
+    #     """
+    #     Overrides __dir__ for autocompletion!
+    #     """
+    #     return super(DynamoDBMapperMixin, self).__dir__() + self.DYNAMO_DB_FIELDS
 
     def __init__(self, *args, **kwargs):
         # Get DynamoDB table instance
@@ -138,14 +137,18 @@ class DynamoDBMapperMixin(object):
 
 
 class UserCustom(DynamoDBMapperMixin, AbstractUser):
-
-    url = models.CharField(max_length=500, default= "url")
+    url = models.CharField(max_length=500, default="url")
 
     DYNAMO_DB_TABLE = 'designmatch-usuarios'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
 
     DYNAMO_DB_FIELDS = [
-        'Username',  'Password', 'Url', 'id', 'Email']
+        'Username', 'Password', 'Url', 'id', 'Email']
+
+    def __iter__(self):
+        for attr in dir(self):
+            if not attr.startswith("__"):
+                yield attr
 
     @classmethod
     def get_id(cls, id):
@@ -159,14 +162,13 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
         )
 
     def save(self, *args, **kwargs):
-
         idFinal = str(uuid.uuid4())
-        urlFinal = self.Username +  idFinal
+        urlFinal = self.username + idFinal
         self.table.put_item(
             Item={
-                'username': self.Username,
-                'password': self.Password,
-                'email': self.Email,
+                'username': self.username,
+                'password': self.password,
+                'email': self.email,
                 'url': urlFinal,
                 'id': idFinal
             }
@@ -182,10 +184,6 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
             AttributeUpdates=update_action
         )
 
-
-
-
-
     # add additional fields in here
 
 
@@ -198,13 +196,7 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
 #         return self.nombre
 
 
-
-
-
-
-
 class Proyecto(DynamoDBMapperMixin, models.Model):
-
     DYNAMO_DB_TABLE = 'designmatch-proyectos'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
     DYNAMO_DB_FIELDS = [
@@ -237,10 +229,7 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
             KeyConditionExpression=Key('id').eq(id))
 
 
-
-
 class Diseno(DynamoDBMapperMixin, models.Model):
-
     DYNAMO_DB_TABLE = 'designmatch-disenos'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
     DYNAMO_DB_FIELDS = [
@@ -253,13 +242,21 @@ class Diseno(DynamoDBMapperMixin, models.Model):
     estado = models.CharField(max_length=500)
     fecha = models.DateTimeField(default=datetime.datetime.utcnow)
     pago = models.IntegerField()
-    #archivo = models.ImageField(upload_to='noProcesadas')
-    #url_archivo_modificado = models.ImageField(upload_to='disponibles', null=True)
+    # archivo = models.ImageField(upload_to='noProcesadas')
+    # url_archivo_modificado = models.ImageField(upload_to='disponibles', null=True)
     proyecto = models.CharField(max_length=500)
-
 
     def __str__(self):
         return self.nombre
+
+    def __iter__(self):
+        for attr in dir(self):
+            yield attr
+
+    @classmethod
+    def get_id(cls, id):
+        return cls.table.query(
+            KeyConditionExpression=Key('id').eq(id))
 
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
@@ -276,11 +273,3 @@ class Diseno(DynamoDBMapperMixin, models.Model):
                 'id': idFinal
             }
         )
-
-
-
-
-
-
-
-

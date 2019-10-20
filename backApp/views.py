@@ -47,16 +47,26 @@ from .models import *
 #     path('diseno/<int:pk>/', views.getDisenoById),
 @csrf_exempt
 def getDisenoById(request, pk):
-    data = serializers.serialize("json", Diseno.objects.filter(pk=pk))
-    return HttpResponse(data)
+    diseno = Diseno.get_id(pk)
+
+    print(diseno)
+    if diseno['Count'] < 1:
+        return HttpResponse(status=404)
+
+    else:
+        return HttpResponse(diseno['Items'])
 
 #     path('proyectos/<int:pk>/', views.getProyectoById),
+
 @csrf_exempt
 def getProyectoById(request, pk):
+    proyecto = Proyecto.get_id(pk)
 
-    data = serializers.serialize("json", Proyecto.objects.filter(pk=pk))
+    if proyecto['Count'] < 1:
+        return HttpResponse(status=404)
 
-    return HttpResponse(data)
+    else:
+        return HttpResponse(proyecto['Items'])
 
 
 
@@ -135,6 +145,8 @@ def get_url_email(request, pUsername):
         data = serializers.serialize("json", user)
         return HttpResponse(data)
 
+
+
 #     path('diseno/', views.send_diseno),
 @csrf_exempt
 def send_diseno(request):
@@ -195,10 +207,11 @@ def send_proyecto(request, email_empresa):
 
             nuevoProyecto.save()
             data = serializers.serialize("json", nuevoProyecto)
+            print(nuevoProyecto)
 
             return HttpResponse(data)
 
-
+# path('auth/signup/', views.registro),
 @csrf_exempt
 def registro(request):
 
@@ -221,16 +234,20 @@ def registro(request):
             b = password.encode('utf-8')  # I just added this line
             password_encrypt = bcrypt.hashpw(b, bcrypt.gensalt())
 
-            empresa = UserCustom()
-            empresa.Username = body['username']
-            empresa.Password = password_encrypt
-            empresa.Email = body['email']
-            empresa.save()
+            empresa2 = UserCustom()
+            empresa2.username = body['username']
+            empresa2.password = password_encrypt
+            empresa2.email = body['email']
+            empresa2.save()
 
-            data = serializers.serialize("json", empresa)
+
+
+
+            data = serializers.serialize("json", empresa2)
+            print(data)
             return HttpResponse(data)
 
-
+#path('auth/', views.login),
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -271,7 +288,7 @@ def login(request):
 
             UserCustom.update( empresa['Items'][0]['email'], 'token' , token )
 
+            print(empresa)
 
 
-            data = serializers.serialize("json", empresa)
-            return HttpResponse(data)
+            return HttpResponse(empresa['Items'])
