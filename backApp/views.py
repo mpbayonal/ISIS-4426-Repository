@@ -47,26 +47,29 @@ from .models import *
 #     path('diseno/<int:pk>/', views.getDisenoById),
 @csrf_exempt
 def getDisenoById(request, pk):
-    diseno = Diseno.get_id(pk)
+    if request.method == 'GET':
 
-    print(diseno)
-    if diseno['Count'] < 1:
-        return HttpResponse(status=404)
+        diseno = Diseno.get_id(pk)
 
-    else:
-        return HttpResponse(diseno['Items'])
+        print(diseno)
+        if diseno['Count'] < 1:
+            return HttpResponse(status=404)
+
+        else:
+            return HttpResponse(diseno['Items'])
 
 #     path('proyectos/<int:pk>/', views.getProyectoById),
 
 @csrf_exempt
 def getProyectoById(request, pk):
-    proyecto = Proyecto.get_id(pk)
+    if request.method == 'GET':
+        proyecto = Proyecto.get_id(pk)
 
-    if proyecto['Count'] < 1:
-        return HttpResponse(status=404)
+        if proyecto['Count'] < 1:
+            return HttpResponse(status=404)
 
-    else:
-        return HttpResponse(proyecto['Items'])
+        else:
+            return HttpResponse(proyecto['Items'])
 
 
 
@@ -114,11 +117,19 @@ def get_proyectos_Url(request, urlLink):
 
     if request.method == 'GET':
 
-        user = UserCustom.objects.get(url = urlLink)
-        proyecto = Proyecto.objects.filter(empresa_id= user.id)
-        data = serializers.serialize("json", proyecto)
+        user = UserCustom.get_url(urlLink)
 
-        return HttpResponse(data)
+        if user['Count'] < 1:
+            return HttpResponse(status=404)
+
+        else:
+            id_Empresa = user['Items'][0]['id']
+            print(id_Empresa)
+            proyectos = Proyecto.get_idEmpresa(id_Empresa)['Items']
+
+            return HttpResponse(proyectos)
+
+
 
 
 #     path('disenos/<int:proyecto_id>/', views.get_diseno_proyecto),
@@ -127,23 +138,30 @@ def get_diseno_proyecto(request, proyecto_id):
 
     if request.method == 'GET':
 
-        proyecto = Proyecto.objects.get(id = proyecto_id)
-        disenos = Diseno.objects.filter(
-            proyecto_id= proyecto.id).filter(
-                estado="Disponible")
-        data = serializers.serialize("json", disenos)
-        return HttpResponse(data)
+        proyecto = Proyecto.get_id(proyecto_id)
+        if proyecto['Count'] < 1:
+            return HttpResponse(status=404)
 
-#     path('user/<pUsername>/', views.get_url_email),
+        else:
+            disenos = Diseno.get_diseno_proyecto(proyecto_id)
+            print(disenos)
+            return HttpResponse(disenos['Items'])
+
+
+
+#     path('user/<pEmail>/', views.get_url_email),
 @csrf_exempt
-def get_url_email(request, pUsername):
+def get_urlEmpresa_email(request, pEmail):
 
     if request.method == 'GET':
-        user = UserCustom.objects.get(username = pUsername)
-        user.url = user.username + "" + str(user.id)
-        user.save()
-        data = serializers.serialize("json", user)
-        return HttpResponse(data)
+        empresa = UserCustom.get_email(pEmail)
+
+        print(empresa)
+        if empresa['Count'] < 1:
+            return HttpResponse(status=404)
+
+        else:
+            return HttpResponse(empresa['Items'])
 
 
 

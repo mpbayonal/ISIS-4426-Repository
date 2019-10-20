@@ -161,6 +161,14 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
             KeyConditionExpression=Key('email').eq(email)
         )
 
+    @classmethod
+    def get_url(cls, url):
+        return cls.table.scan(
+            FilterExpression=Attr('url').eq(url))
+
+
+
+
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
         urlFinal = self.username + idFinal
@@ -229,6 +237,13 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
             KeyConditionExpression=Key('id').eq(id))
 
 
+
+    @classmethod
+    def get_idEmpresa(cls, id_Empresa):
+        return cls.table.scan(
+            FilterExpression=Attr('empresa').eq(id_Empresa))
+
+
 class Diseno(DynamoDBMapperMixin, models.Model):
     DYNAMO_DB_TABLE = 'designmatch-disenos'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
@@ -255,8 +270,22 @@ class Diseno(DynamoDBMapperMixin, models.Model):
 
     @classmethod
     def get_id(cls, id):
+        return cls.table.scan(
+            FilterExpression=Attr('id').eq(id))
+
+    @classmethod
+    def get_diseno_proyecto(cls, proyecto_id):
         return cls.table.query(
-            KeyConditionExpression=Key('id').eq(id))
+            KeyConditionExpression=Key('proyecto').eq(proyecto_id) & Key('estado').eq('Disponible')
+        )
+
+        #     cls. table.scan(
+        #     FilterExpression=Attr('proyecto').eq(proyecto_id) &
+        #                      Attr('estado').eq('Disponible')
+        # )['Items']
+
+
+
 
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
