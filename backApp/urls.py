@@ -8,7 +8,7 @@ urlpatterns = [
     path('user/<pEmail>/', views.get_urlEmpresa_email),
     path('disenos/<proyecto_id>/', views.get_diseno_proyecto),
     path('proyectos/<pk>/', views.getProyectoById),
-    path('proyectos/<int:pk>/eliminar/', views.eliminar_proyecto),
+    path('proyectos/<pk>/eliminar/', views.eliminar_proyecto),
     path('proyectos/<int:pk>/editar/', views.editar_proyecto),
     path('diseno/<pk>/', views.getDisenoById),
     path('diseno/', views.send_diseno),

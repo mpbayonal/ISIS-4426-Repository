@@ -219,6 +219,26 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
     def __str__(self):
         return self.nombre
 
+    @classmethod
+    def delete(cls, id):
+        return cls.table.delete_item( Key={
+                'id': id
+            }
+        )
+
+    @classmethod
+    def update(cls, *args,  id):
+        idFinal = str(uuid.uuid4())
+        cls.table.update_item(
+        Key={
+            'id': id
+        },
+        UpdateExpression='SET age = :val1',
+        ExpressionAttributeValues={
+            ':val1': 26
+        }
+    )
+
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
         self.table.put_item(

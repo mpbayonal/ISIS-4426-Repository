@@ -102,8 +102,18 @@ def editar_proyecto(request, pk):
 def eliminar_proyecto(request, pk):
 
     if request.method == 'POST':
-        proyecto = Proyecto.objects.filter(pk = pk).delete()
-        return HttpResponse(status=204)
+
+        proyecto = Proyecto.get_id(pk)
+
+        if proyecto['Count'] < 1:
+            return HttpResponse(status=404)
+
+        else:
+            Proyecto.delete(pk)
+
+            return HttpResponse(status=204)
+
+    
 
 
 
