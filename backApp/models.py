@@ -166,9 +166,6 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
         return cls.table.scan(
             FilterExpression=Attr('url').eq(url))
 
-
-
-
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
         urlFinal = self.username + idFinal
@@ -221,23 +218,25 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
 
     @classmethod
     def delete(cls, id):
-        return cls.table.delete_item( Key={
+        return cls.table.delete_item(Key={
+            'id': id
+        }
+        )
+
+    @classmethod
+    def update(cls, descripcion, nombre, pago, id, empresa):
+        cls.delete(id)
+        cls.table.put_item(
+            Item={
+                'empresa': empresa,
+                'nombre': nombre,
+                'descripcion': descripcion,
+                'pago': pago,
                 'id': id
             }
         )
 
-    @classmethod
-    def update(cls, *args,  id):
-        idFinal = str(uuid.uuid4())
-        cls.table.update_item(
-        Key={
-            'id': id
-        },
-        UpdateExpression='SET age = :val1',
-        ExpressionAttributeValues={
-            ':val1': 26
-        }
-    )
+
 
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
@@ -255,8 +254,6 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
     def get_id(cls, id):
         return cls.table.query(
             KeyConditionExpression=Key('id').eq(id))
-
-
 
     @classmethod
     def get_idEmpresa(cls, id_Empresa):
@@ -303,9 +300,6 @@ class Diseno(DynamoDBMapperMixin, models.Model):
         #     FilterExpression=Attr('proyecto').eq(proyecto_id) &
         #                      Attr('estado').eq('Disponible')
         # )['Items']
-
-
-
 
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())

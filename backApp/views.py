@@ -44,7 +44,7 @@ from .models import *
 
 
 
-#     path('diseno/<int:pk>/', views.getDisenoById),
+#     path('diseno/<pk>/', views.getDisenoById),
 @csrf_exempt
 def getDisenoById(request, pk):
     if request.method == 'GET':
@@ -58,7 +58,7 @@ def getDisenoById(request, pk):
         else:
             return HttpResponse(diseno['Items'])
 
-#     path('proyectos/<int:pk>/', views.getProyectoById),
+#     path('proyectos/<pk>/', views.getProyectoById),
 
 @csrf_exempt
 def getProyectoById(request, pk):
@@ -74,26 +74,39 @@ def getProyectoById(request, pk):
 
 
 
-#     path('proyectos/<int:pk>/editar/', views.editar_proyecto),
+#     path('proyectos/<pk>/editar/', views.editar_proyecto),
 @csrf_exempt
 def editar_proyecto(request, pk):
 
     if request.method == 'POST':
-        data = request
-        body_unicode = request.body.decode('utf-8')
-        proyecto = Proyecto.objects.get(id = pk)
-        body = json.loads(body_unicode)
-        print(body)
 
-        proyecto.nombre = body['nombre']
-        proyecto.pago=body['pago']
-        proyecto.empresa=proyecto
-        proyecto.descripcion=body['descripcion']
+        proyecto = Proyecto.get_id(pk)
 
-        proyecto.save()
-        data = serializers.serialize("json", Proyecto)
+        if proyecto['Count'] < 1:
+            return HttpResponse(status=404)
 
-        return HttpResponse(data)
+        else:
+            data = request
+            body_unicode = request.body.decode('utf-8')
+
+            body = json.loads(body_unicode)
+            nombre = body['nombre']
+            print(nombre)
+            print(pk)
+            pago = body['pago']
+            print(pago)
+            descripcion = body['descripcion']
+            empresa = body['empresa']
+            print(empresa)
+            print(descripcion)
+            proyecto = Proyecto.update(descripcion,nombre,pago,pk,empresa)
+            print(proyecto)
+
+            data = serializers.serialize("json", proyecto)
+
+            return HttpResponse(data)
+
+
 
 
 
@@ -113,7 +126,7 @@ def eliminar_proyecto(request, pk):
 
             return HttpResponse(status=204)
 
-    
+
 
 
 

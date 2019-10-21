@@ -9,7 +9,7 @@ urlpatterns = [
     path('disenos/<proyecto_id>/', views.get_diseno_proyecto),
     path('proyectos/<pk>/', views.getProyectoById),
     path('proyectos/<pk>/eliminar/', views.eliminar_proyecto),
-    path('proyectos/<int:pk>/editar/', views.editar_proyecto),
+    path('proyectos/<pk>/editar/', views.editar_proyecto),
     path('diseno/<pk>/', views.getDisenoById),
     path('diseno/', views.send_diseno),
     path('proyectos/<email_empresa>/crear/', views.send_proyecto),
