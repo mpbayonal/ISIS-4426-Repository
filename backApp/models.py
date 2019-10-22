@@ -265,7 +265,7 @@ class Diseno(DynamoDBMapperMixin, models.Model):
     DYNAMO_DB_TABLE = 'designmatch-disenos'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
     DYNAMO_DB_FIELDS = [
-        'Nombre', 'Apellido', 'Email', 'Estado', 'Fecha', 'Pago', 'Proyecto', 'id'
+        'Nombre', 'Apellido', 'Email', 'Estado', 'Fecha', 'Pago', 'Archivo', 'Url_archivo','Proyecto', 'id'
     ]
 
     nombre = models.CharField(max_length=500)
@@ -273,9 +273,9 @@ class Diseno(DynamoDBMapperMixin, models.Model):
     email = models.CharField(max_length=500)
     estado = models.CharField(max_length=500)
     fecha = models.DateTimeField(default=datetime.datetime.utcnow)
-    pago = models.IntegerField()
-    # archivo = models.ImageField(upload_to='noProcesadas')
-    # url_archivo_modificado = models.ImageField(upload_to='disponibles', null=True)
+    pago = models.CharField(max_length=500)
+    archivo = models.CharField(max_length=500)
+    url_archivo_modificado = models.CharField(max_length=500)
     proyecto = models.CharField(max_length=500)
 
     def __str__(self):
@@ -296,11 +296,6 @@ class Diseno(DynamoDBMapperMixin, models.Model):
             KeyConditionExpression=Key('proyecto').eq(proyecto_id) & Key('estado').eq('Disponible')
         )
 
-        #     cls. table.scan(
-        #     FilterExpression=Attr('proyecto').eq(proyecto_id) &
-        #                      Attr('estado').eq('Disponible')
-        # )['Items']
-
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
         fechaNow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
@@ -311,6 +306,8 @@ class Diseno(DynamoDBMapperMixin, models.Model):
                 'email': self.email,
                 'estado': self.estado,
                 'pago': self.pago,
+                'archivo': self.archivo,
+                # 'url_archivo': self.url_archivo,
                 'proyecto': self.proyecto,
                 'fecha': fechaNow,
                 'id': idFinal

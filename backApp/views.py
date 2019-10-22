@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.core import serializers
-
+from django.utils.crypto import get_random_string
 from rest_framework.utils import json
 
 from . import serializers
@@ -17,35 +17,26 @@ from .models import *
 from .serializers import *
 from .tasks import process_image_and_send_mail
 
+from boto3 import resource
+from botocore.exceptions import ClientError
 
-# path('proyecto/<urlLink>/', views.get_proyectos_Url),
-# path('user/<pUsername>/', views.get_url_email),
-# path('disenos/<int:proyecto_id>/', views.get_diseno_proyecto),
+'''
+path('proyecto/<urlLink>/', views.get_proyectos_Url),
+path('user/<pUsername>/', views.get_url_email),
+path('disenos/<int:proyecto_id>/', views.get_diseno_proyecto),
 
-# path('proyectos/', views.ListProyecto.as_view()),
-# path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
+path('proyectos/', views.ListProyecto.as_view()),
+path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
 
-# path('diseno/<int:pk>/', views.getDisenoById),
-# path('diseno/', views.send_diseno),
-# path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
-#
-# path('auth/', include('rest_auth.urls')),
-# path('auth/signup/', include('rest_auth.registration.urls')),
+path('diseno/<int:pk>/', views.getDisenoById),
+path('diseno/', views.send_diseno),
+path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
 
+path('auth/', include('rest_auth.urls')),
+path('auth/signup/', include('rest_auth.registration.urls')),
+'''
 
-
-
-    # def create(self, request, *args, **kwargs): # don't need to `self.request` since `request` is available as a parameter.
-    #     serializer = self.serializer_class(request.data)
-    #     data = serializer.data
-    #     os.mkdir(data['nombre'])
-    #     return JsonResponse(serializer.data, safe=False)
-
-
-
-
-
-#     path('diseno/<pk>/', views.getDisenoById),
+s3_images_bucket = 'designmatch-grupo2'
 @csrf_exempt
 def getDisenoById(request, pk):
     if request.method == 'GET':
@@ -61,6 +52,7 @@ def getDisenoById(request, pk):
 
 #     path('proyectos/<pk>/', views.getProyectoById),
 
+
 @csrf_exempt
 def getProyectoById(request, pk):
     if request.method == 'GET':
@@ -71,8 +63,6 @@ def getProyectoById(request, pk):
 
         else:
             return HttpResponse(proyecto['Items'])
-
-
 
 
 #     path('proyectos/<pk>/editar/', views.editar_proyecto),
@@ -92,23 +82,14 @@ def editar_proyecto(request, pk):
 
             body = json.loads(body_unicode)
             nombre = body['nombre']
-            print(nombre)
-            print(pk)
             pago = body['pago']
-            print(pago)
             descripcion = body['descripcion']
             empresa = body['empresa']
-            print(empresa)
-            print(descripcion)
-            proyecto = Proyecto.update(descripcion,nombre,pago,pk,empresa)
-            print(proyecto)
+            proyecto = Proyecto.update(descripcion, nombre, pago, pk, empresa)
 
             data = serializers.serialize("json", proyecto)
 
             return HttpResponse(data)
-
-
-
 
 
 #     path('proyectos/<int:pk>/eliminar/', views.eliminar_proyecto),
@@ -126,13 +107,6 @@ def eliminar_proyecto(request, pk):
             Proyecto.delete(pk)
 
             return HttpResponse(status=204)
-
-
-
-
-
-
-
 
 
 # path('proyecto/<urlLink>/', views.get_proyectos_Url),
@@ -154,8 +128,6 @@ def get_proyectos_Url(request, urlLink):
             return HttpResponse(proyectos)
 
 
-
-
 #     path('disenos/<int:proyecto_id>/', views.get_diseno_proyecto),
 @csrf_exempt
 def get_diseno_proyecto(request, proyecto_id):
@@ -172,7 +144,6 @@ def get_diseno_proyecto(request, proyecto_id):
             return HttpResponse(disenos['Items'])
 
 
-
 #     path('user/<pEmail>/', views.get_url_email),
 @csrf_exempt
 def get_urlEmpresa_email(request, pEmail):
@@ -187,7 +158,23 @@ def get_urlEmpresa_email(request, pEmail):
         else:
             return HttpResponse(empresa['Items'])
 
-
+def save_diseno(data, image, name):
+    nuevoDiseño = Diseno()
+    nuevoDiseño.nombre = data['nombre']
+    nuevoDiseño.apellido = data['apellido']
+    nuevoDiseño.email = data['email']
+    nuevoDiseño.estado = data['estado']
+    nuevoDiseño.pago = data['pago']
+    nuevoDiseño.proyecto = data['proyecto']
+    nuevoDiseño.archivo = name
+    print(name)
+    resource('s3').Bucket(s3_images_bucket).put_object(
+            Body=image,
+            Key=name
+        )
+    print("will save")
+    nuevoDiseño.save()
+    return nuevoDiseño
 
 #     path('diseno/', views.send_diseno),
 @csrf_exempt
@@ -200,27 +187,25 @@ def send_diseno(request):
 
         proyecto = Proyecto.get_id(data['proyecto'])
 
-        if proyecto['Count'] < 1 :
+        if proyecto['Count'] < 1:
             return HttpResponse(status=404)
-
         else:
-            nuevoDiseño = Diseno()
-
-            nuevoDiseño.nombre = data['nombre']
-
-            nuevoDiseño.apellido=data['apellido']
-            nuevoDiseño.email=data['email']
-            nuevoDiseño.estado=data['estado']
-            nuevoDiseño.pago=data['pago']
-            nuevoDiseño.proyecto=data['proyecto']
-
-            nuevoDiseño.save()
-            process_image_and_send_mail.delay(nuevoDiseño.id)
-
-            data = serializers.serialize("json", nuevoProyecto)
-            return HttpResponse(serializers.serialize("json" , data))
-
-
+            # https://designmatch-grupo2.s3.amazonaws.com/noProcesado/ffvii-remake-aerith-gold-saucer.jpg
+            diseno = {}
+            try:
+                file_object = resource('s3').Object(s3_images_bucket, 'noProcesado/'+input_image.name).last_modified
+                dir_name, file_name = os.path.split(input_image.name)
+                file_root, file_ext = os.path.splitext(file_name)
+                new_name = '{0}{1}{2}{3}'.format(file_root,'_', get_random_string(), file_ext)
+                diseno = save_diseno(data, input_image, 'noProcesado/'+new_name )
+                print("hi")
+            except ClientError:
+                print('no')
+                diseno = save_diseno(data, input_image, 'noProcesado/'+input_image.name )
+            print(diseno.id)
+            # process_image_and_send_mail.delay(diseno.id)
+            print("wat")
+            return HttpResponse({})
 
 
 #     path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
@@ -236,7 +221,7 @@ def send_proyecto(request, email_empresa):
         body = json.loads(body_unicode)
         print(body)
 
-        if empresa['Count'] < 1 :
+        if empresa['Count'] < 1:
             return HttpResponse(status=404)
 
         else:
@@ -283,9 +268,6 @@ def registro(request):
             empresa2.email = body['email']
             empresa2.save()
 
-
-
-
             data = serializers.serialize("json", empresa2)
             print(data)
             return HttpResponse(data)
@@ -299,16 +281,12 @@ def login(request):
         body = json.loads(body_unicode)
         empresa = UserCustom.get_email(body['email'])
 
-
-
-        if empresa['Count'] < 1 :
+        if empresa['Count'] < 1:
             return HttpResponse(status=404)
-
 
         password = body['password'].encode('utf-8')
 
         passwordHash = empresa['Items'][0]['password'].value
-
 
         if bcrypt.checkpw(password, passwordHash) == False:
             return HttpResponse(status=401)
@@ -328,10 +306,8 @@ def login(request):
 
             #payload = jwt.decode(auth_token, settings.SECRET_KEY)
 
-
-            UserCustom.update( empresa['Items'][0]['email'], 'token' , token )
+            UserCustom.update(empresa['Items'][0]['email'], 'token', token)
 
             print(empresa)
-
 
             return HttpResponse(empresa['Items'])

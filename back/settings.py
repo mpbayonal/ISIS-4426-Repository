@@ -35,10 +35,22 @@ MEDIA_URL = os.getenv('FILES_URL')
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 
+AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY = AWS_SECRET_KEY
+AWS_STORAGE_BUCKET_NAME = 'designmatch-grupo2'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
 
-CORS_ORIGIN_ALLOW_ALL=True
+
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE = '.s3_storage.MediaStorage'
+
+
+CORS_ORIGIN_ALLOW_ALL = True
 # Extra places for collectstatic to find static files.
-
 
 
 SITE_ID = 1
@@ -54,9 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-
-
+    'storages',
 ]
 
 PASSWORD_HASHERS = [
@@ -98,8 +108,7 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +134,6 @@ REST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 10
 }
-
 
 
 # Password validation
