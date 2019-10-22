@@ -37,7 +37,7 @@ def process_image_and_send_mail():
                 diseno = Diseno.get_id(diseno_id)['Items'][0]
                 s3 = resource('s3')
                 s3.Bucket(s3_images_bucket).download_file(
-                    diseno['archivo'], './tmp/'+diseno['archivo'])
+                    diseno['archivo'], '/tmp/'+diseno['archivo'])
                 img = Image.open('/tmp/'+diseno['archivo'], "r")
                 imgResize = img.resize((800, 600), Image.ANTIALIAS)
                 draw = ImageDraw.Draw(imgResize)
