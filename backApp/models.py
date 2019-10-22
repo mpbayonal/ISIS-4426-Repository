@@ -262,7 +262,7 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
 
 
 class Diseno(DynamoDBMapperMixin, models.Model):
-    DYNAMO_DB_TABLE = 'designmatch-disenos'
+    DYNAMO_DB_TABLE = 'designmatch-diseno'
     table = dynamodb.Table(DYNAMO_DB_TABLE)
     DYNAMO_DB_FIELDS = [
         'Nombre', 'Apellido', 'Email', 'Estado', 'Fecha', 'Pago', 'Archivo', 'Url_archivo','Proyecto', 'id'
@@ -275,7 +275,7 @@ class Diseno(DynamoDBMapperMixin, models.Model):
     fecha = models.DateTimeField(default=datetime.datetime.utcnow)
     pago = models.CharField(max_length=500)
     archivo = models.CharField(max_length=500)
-    url_archivo_modificado = models.CharField(max_length=500)
+    url_archivo = models.CharField(max_length=500)
     proyecto = models.CharField(max_length=500)
 
     def __str__(self):
@@ -287,13 +287,40 @@ class Diseno(DynamoDBMapperMixin, models.Model):
 
     @classmethod
     def get_id(cls, id):
-        return cls.table.scan(
-            FilterExpression=Attr('id').eq(id))
+        return cls.table.query(
+            KeyConditionExpression=Key('id').eq(id))
+
 
     @classmethod
     def get_diseno_proyecto(cls, proyecto_id):
-        return cls.table.query(
-            KeyConditionExpression=Key('proyecto').eq(proyecto_id) & Key('estado').eq('Disponible')
+        return cls. table.scan(
+             FilterExpression=Attr('proyecto').eq(proyecto_id) &
+                              Attr('estado').eq('Disponible')
+         )
+
+    @classmethod
+    def delete(cls, id):
+        return cls.table.delete_item(Key={
+            'id': id
+        }
+        )
+
+    @classmethod
+    def update(cls, apellido, nombre, pago, id, proyecto, fecha, archivo, url_archivo, email, estado):
+        cls.delete(id)
+        cls.table.put_item(
+            Item={
+                'proyecto': proyecto,
+                'nombre': nombre,
+                'apellido': apellido,
+                'pago': pago,
+                'id': id,
+                'archivo': archivo,
+                'estado': estado,
+                'url_archivo': url_archivo,
+                'fecha': fecha,
+                'email': email
+            }
         )
 
     def save(self, *args, **kwargs):
@@ -313,3 +340,4 @@ class Diseno(DynamoDBMapperMixin, models.Model):
                 'id': idFinal
             }
         )
+        self.id = idFinal

@@ -38,16 +38,6 @@ AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY
 AWS_SECRET_ACCESS_KEY = AWS_SECRET_KEY
 AWS_STORAGE_BUCKET_NAME = 'designmatch-grupo2'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = 'static'
-
-
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-STATICFILES_STORAGE = '.s3_storage.MediaStorage'
-
 
 CORS_ORIGIN_ALLOW_ALL = True
 # Extra places for collectstatic to find static files.
@@ -66,7 +56,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'storages',
 ]
 
 PASSWORD_HASHERS = [

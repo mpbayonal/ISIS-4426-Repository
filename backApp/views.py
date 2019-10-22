@@ -17,7 +17,7 @@ from .models import *
 from .serializers import *
 from .tasks import process_image_and_send_mail
 
-from boto3 import resource
+from boto3 import resource, client
 from botocore.exceptions import ClientError
 
 '''
@@ -48,7 +48,7 @@ def getDisenoById(request, pk):
             return HttpResponse(status=404)
 
         else:
-            return HttpResponse(diseno['Items'])
+            return HttpResponse(diseno['Items'][0])
 
 #     path('proyectos/<pk>/', views.getProyectoById),
 
@@ -158,6 +158,7 @@ def get_urlEmpresa_email(request, pEmail):
         else:
             return HttpResponse(empresa['Items'])
 
+
 def save_diseno(data, image, name):
     nuevoDiseño = Diseno()
     nuevoDiseño.nombre = data['nombre']
@@ -167,12 +168,10 @@ def save_diseno(data, image, name):
     nuevoDiseño.pago = data['pago']
     nuevoDiseño.proyecto = data['proyecto']
     nuevoDiseño.archivo = name
-    print(name)
     resource('s3').Bucket(s3_images_bucket).put_object(
-            Body=image,
-            Key=name
-        )
-    print("will save")
+        Body=image,
+        Key=name
+    )
     nuevoDiseño.save()
     return nuevoDiseño
 
@@ -193,23 +192,41 @@ def send_diseno(request):
             # https://designmatch-grupo2.s3.amazonaws.com/noProcesado/ffvii-remake-aerith-gold-saucer.jpg
             diseno = {}
             try:
-                file_object = resource('s3').Object(s3_images_bucket, 'noProcesado/'+input_image.name).last_modified
+                file_object = resource('s3').Object(
+                    s3_images_bucket, 'noProcesado/'+input_image.name).last_modified
                 dir_name, file_name = os.path.split(input_image.name)
                 file_root, file_ext = os.path.splitext(file_name)
-                new_name = '{0}{1}{2}{3}'.format(file_root,'_', get_random_string(), file_ext)
-                diseno = save_diseno(data, input_image, 'noProcesado/'+new_name )
-                print("hi")
+                new_name = '{0}{1}{2}{3}'.format(
+                    file_root, '_', get_random_string(), file_ext)
+                diseno = save_diseno(
+                    data, input_image, 'noProcesado/'+new_name)
             except ClientError:
-                print('no')
-                diseno = save_diseno(data, input_image, 'noProcesado/'+input_image.name )
-            print(diseno.id)
-            # process_image_and_send_mail.delay(diseno.id)
-            print("wat")
-            return HttpResponse({})
+                diseno = save_diseno(
+                    data, input_image, 'noProcesado/'+input_image.name)
+            send_task(diseno.id)
+            return HttpResponse(
+                json.dumps(dict(
+                    id=diseno.id,
+                    nombre=diseno.nombre,
+                    apellido=diseno.apellido,
+                    archivo=diseno.archivo,
+                    email=diseno.email,
+                    fecha=str(diseno.fecha),
+                    url_archivo=diseno.url_archivo,
+                    pago=diseno.pago,
+                    estado=diseno.estado
+                ))
+            )
+
+
+def send_task(diseno):
+    sqs = client('sqs', 'us-east-1')
+    sqs.send_message(
+        QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', 
+        MessageBody=diseno)
 
 
 #     path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
-
 @csrf_exempt
 def send_proyecto(request, email_empresa):
 
