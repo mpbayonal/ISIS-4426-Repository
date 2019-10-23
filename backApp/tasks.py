@@ -13,7 +13,7 @@ from .models import Diseno
 
 logger = get_task_logger(__name__)
 
-dynamodb = boto3.resource(
+dynamodb = resource(
     'dynamodb',
     region_name='us-east-1',
     aws_access_key_id=settings.AWS_ACCESS_KEY,
