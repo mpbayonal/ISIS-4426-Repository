@@ -13,7 +13,7 @@ export class ProyectoService {
 
 
   getProyectos(empresa: string) {
-    return this.http.get(`${API_URI}/proyecto/${empresa}`);
+    return this.http.get(`${API_URI}/proyecto/${empresa}/`);
   }
   agregarProyecto(proyecto, empresa) {
     return this.http.post(`${API_URI}/proyectos/${empresa}/crear/`, proyecto);
