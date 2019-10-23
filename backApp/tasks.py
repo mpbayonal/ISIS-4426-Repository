@@ -14,7 +14,7 @@ from .models import Diseno
 
 logger = get_task_logger(__name__)
 
-dynamodb = resource('dynamodb')
+dynamodb = client('dynamodb')
 
 connection = client(
     'ses',
@@ -22,8 +22,6 @@ connection = client(
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
     aws_secret_access_key=os.getenv('AWS_SECRET_KEY')
 )
-
-dynamodb_table = dynamodb.Table('modelo-c')
 
 @task(
     name="send_feedback_email_task",
@@ -66,11 +64,12 @@ def process_image_and_send_mail(id):
         Source='je.bautista10@uniandes.edu.co',
     )
     end = datetime.datetime.utcnow()
-    dynamodb_table.put_item(
-            Item={
-                'origen': diseno.id,
-                'fecha': str(datetime.datetime.utcnow()),
-                'tiempo': str((end-start).total_seconds())
-            }
-        )
+    dynamodb.put_item(
+        TableName='modelo-c',
+        Item={
+            'origen': diseno.id,
+            'fecha': str(datetime.datetime.utcnow()),
+            'tiempo': str((end-start).total_seconds())
+        }
+    )
     return (end-start).total_seconds()
