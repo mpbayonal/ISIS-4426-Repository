@@ -59,7 +59,7 @@ def process_image_and_send_mail(id):
                 'Text': {
                     'Charset': 'UTF-8',
                     'Data': 'Tu diseño ya están disponible\n \
-                    http://d1tprqpr49zo0i.cloudfront.net/empresa/proyectos/diseños/'+diseno.id,
+                    http://d1tprqpr49zo0i.cloudfront.net/empresa/proyectos/diseños/'+str(diseno.id),
                 },
             },
             'Subject': {

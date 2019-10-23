@@ -6,8 +6,6 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY . .
-RUN cd back
-RUN ls -lrt
 
 RUN pip install -r requirements.txt
 
