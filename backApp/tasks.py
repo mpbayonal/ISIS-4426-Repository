@@ -75,7 +75,7 @@ def process_image_and_send_mail(id):
             Item={
                 'origen': diseno.id,
                 'fecha': str(datetime.datetime.utcnow()),
-                'tiempo': Decimal((end-start).total_seconds())
+                'tiempo': str((end-start).total_seconds())
             }
         )
     return (end-start).total_seconds()
