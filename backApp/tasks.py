@@ -14,7 +14,7 @@ from .models import Diseno
 
 logger = get_task_logger(__name__)
 
-dynamodb = client('dynamodb')
+dynamodb = client('dynamodb', 'us-east-1')
 
 connection = client(
     'ses',
