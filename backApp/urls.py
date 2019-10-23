@@ -19,7 +19,7 @@ urlpatterns = [
     path('proyectos/<int:pk>/', views.DetailProyecto.as_view()),
     path('disenos/', views.ListDiseno.as_view()),
     path('diseno/<int:pk>/', views.DetailDiseno.as_view()),
-    path('diseno/', views.send_diseno),
+    path('enviar/', views.send_diseno),
     path('proyectos/<int:id_empresa>/crear/', views.send_proyecto),
     path('', views.health),
     path('auth/', include('rest_auth.urls')),
