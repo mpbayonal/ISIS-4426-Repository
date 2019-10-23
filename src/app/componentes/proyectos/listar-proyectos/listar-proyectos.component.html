@@ -1,6 +1,6 @@
 <div class="container p-4">
   <div class="row">
-    <div class="col-md-6 p-4" *ngFor="let proyecto of proyectos | paginate: pageSize:pageNumber">
+    <div class="col-md-6 p-4" *ngFor="let proyecto of proyectos | paginate: page_size:page_number">
       <div class="card text-center  " id="proyectosCard">
         <div class="card-header bg-dark text-white">
           <a>
@@ -32,7 +32,7 @@
       </div>
     </div>
   </div>
-  <mat-paginator [length]="proyectos.length" [pageSize]="pageSize" (page)="handlePage($event)">
+  <mat-paginator [length]="proyectos.length" [pageSize]="page_size" (page)="handlePage($event)">
   </mat-paginator>
   <hr>
   <div class="box-footer clearfix">
