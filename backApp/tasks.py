@@ -1,6 +1,7 @@
 import datetime
 import io
 import os
+from decimal import Decimal
 
 from boto3 import client, resource
 from celery.decorators import task
@@ -74,7 +75,7 @@ def process_image_and_send_mail(id):
             Item={
                 'origen': diseno.id,
                 'fecha': str(datetime.datetime.utcnow()),
-                'tiempo': (end-start).total_seconds()
+                'tiempo': Decimal((end-start).total_seconds())
             }
         )
     return (end-start).total_seconds()
