@@ -67,9 +67,9 @@ def process_image_and_send_mail(id):
     dynamodb.put_item(
         TableName='modelo-c',
         Item={
-            'origen': diseno.id,
-            'fecha': str(datetime.datetime.utcnow()),
-            'tiempo': str((end-start).total_seconds())
+            'origen': {'S': str(diseno.id)},
+            'fecha': {'S': str(datetime.datetime.utcnow())},
+            'tiempo': {'N': str((end-start).total_seconds())}
         }
     )
     return (end-start).total_seconds()
