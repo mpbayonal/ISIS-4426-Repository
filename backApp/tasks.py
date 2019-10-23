@@ -1,6 +1,7 @@
 import datetime
 import io
 import os
+from decimal import Decimal
 
 from boto3 import client, resource
 from celery.decorators import task
@@ -13,12 +14,9 @@ from .models import Diseno
 
 logger = get_task_logger(__name__)
 
-dynamodb = resource(
-    'dynamodb',
-    region_name='us-east-1',
-    aws_access_key_id=settings.AWS_ACCESS_KEY,
-    aws_secret_access_key=settings.AWS_SECRET_KEY
-)
+dynamodb = client('dynamodb', 'us-east-1',
+                  aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+                  aws_secret_access_key=os.getenv('AWS_SECRET_KEY'))
 
 connection = client(
     'ses',
@@ -27,14 +25,13 @@ connection = client(
     aws_secret_access_key=os.getenv('AWS_SECRET_KEY')
 )
 
-dynamodb_table = dynamodb.Table('modelo-c')
 
 @task(
     name="send_feedback_email_task",
     ignore_result=True
 )
 def process_image_and_send_mail(id):
-    
+
     start = datetime.datetime.utcnow()
     diseno = Diseno.objects.filter(id=id)[:1].get()
     img = Image.open(diseno.archivo, "r")
@@ -59,7 +56,7 @@ def process_image_and_send_mail(id):
                 'Text': {
                     'Charset': 'UTF-8',
                     'Data': 'Tu diseño ya están disponible\n \
-                    http://d1tprqpr49zo0i.cloudfront.net/empresa/proyectos/diseños/'+diseno.id,
+                    http://d1tprqpr49zo0i.cloudfront.net/empresa/proyectos/diseños/'+str(diseno.id),
                 },
             },
             'Subject': {
@@ -70,11 +67,12 @@ def process_image_and_send_mail(id):
         Source='je.bautista10@uniandes.edu.co',
     )
     end = datetime.datetime.utcnow()
-    dynamodb_table.put_item(
-            Item={
-                'origen': diseno.id,
-                'fecha': str(datetime.datetime.utcnow()),
-                'tiempo': (end-start).total_seconds()
-            }
-        )
+    dynamodb.put_item(
+        TableName='modelo-c',
+        Item={
+            'origen': {'S': str(diseno.id)},
+            'fecha': {'S': str(datetime.datetime.utcnow())},
+            'tiempo': {'N': str((end-start).total_seconds())}
+        }
+    )
     return (end-start).total_seconds()
