@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
-ENTRYPOINT celery worker -A back -l info
+ENTRYPOINT celery worker -A back -l info -n %n
