@@ -88,6 +88,10 @@ def get_url_email(request, pUsername):
 
 
 @csrf_exempt
+def health(request):
+    return JsonResponse({})
+
+@csrf_exempt
 def send_diseno(request):
 
     if request.method == 'POST':
