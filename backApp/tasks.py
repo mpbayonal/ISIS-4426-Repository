@@ -14,7 +14,9 @@ from .models import Diseno
 
 logger = get_task_logger(__name__)
 
-dynamodb = client('dynamodb', 'us-east-1')
+dynamodb = client('dynamodb', 'us-east-1',
+                  aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+                  aws_secret_access_key=os.getenv('AWS_SECRET_KEY'))
 
 connection = client(
     'ses',
@@ -23,12 +25,13 @@ connection = client(
     aws_secret_access_key=os.getenv('AWS_SECRET_KEY')
 )
 
+
 @task(
     name="send_feedback_email_task",
     ignore_result=True
 )
 def process_image_and_send_mail(id):
-    
+
     start = datetime.datetime.utcnow()
     diseno = Diseno.objects.filter(id=id)[:1].get()
     img = Image.open(diseno.archivo, "r")
