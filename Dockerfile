@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
 
-ENTRYPOINT ["gunicorn", "--timeout", "1200", "-b", ":8080", "--access-logfile", "-", "--error-logfile", "-", "back.wsgi:application"]
+ENTRYPOINT ["gunicorn", "-b", ":8080", "--timeout", "1200", "--access-logfile", "-", "--error-logfile", "-", "back.wsgi:application"]
