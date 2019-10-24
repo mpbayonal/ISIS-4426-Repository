@@ -124,7 +124,7 @@ class Command(BaseCommand):
                         }
                     )
                     # Let the queue know that the message is processed
-                    sqs=resource('sqs')
+                    sqs=resource('sqs', 'us-east-1')
                     message=sqs.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
