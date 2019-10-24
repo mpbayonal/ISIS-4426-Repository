@@ -18,6 +18,17 @@ logger = get_task_logger(__name__)
 
 s3_images_bucket = 'designmatch-grupo2'
 
+dynamodb = client('dynamodb', 'us-east-1',
+                  aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+                  aws_secret_access_key=os.getenv('AWS_SECRET_KEY'))
+
+connection = client(
+    'ses',
+    'us-east-1',
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_KEY')
+)
+
 
 @task(
     name="send_feedback_email_task",
@@ -32,8 +43,6 @@ def process_image_and_send_mail():
             for message in response['Messages']:
                 start = datetime.datetime.utcnow()
                 diseno_id = message['Body']
-                print(message)
-                print(Diseno.get_id(diseno_id)['Items'])
                 diseno = Diseno.get_id(diseno_id)['Items'][0]
                 s3 = resource('s3')
                 s3.Bucket(s3_images_bucket).download_file(
@@ -45,7 +54,8 @@ def process_image_and_send_mail():
                     diseno['nombre'], diseno['apellido'], diseno['fecha']), (0, 0, 0))
                 in_mem_file = io.BytesIO()
                 imgResize.save(in_mem_file, format='JPEG')
-                nombre = diseno['archivo'].replace('noProcesado/', 'disponible/')
+                nombre = diseno['archivo'].replace(
+                    'noProcesado/', 'disponible/')
                 try:
                     file_object = resource('s3').Object(
                         s3_images_bucket, nombre).last_modified
@@ -83,12 +93,6 @@ def process_image_and_send_mail():
                         nombre,
                         diseno['email'],
                         'Disponible')
-                connection = client(
-                    'ses',
-                    'us-east-1',
-                    aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.getenv('AWS_SECRET_KEY')
-                )
 
                 response = connection.send_email(
                     Destination={
@@ -98,8 +102,8 @@ def process_image_and_send_mail():
                         'Body': {
                             'Text': {
                                 'Charset': 'UTF-8',
-                                'Data': 'Tus diseños ya están disponibles\n\
-                            http://localhost/empresa/proyectos/diseños/'+diseno['id'],
+                                'Data': 'Tu diseño ya está disponible\n\
+                            http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/'+diseno_id,
                             },
                         },
                         'Subject': {
@@ -110,7 +114,14 @@ def process_image_and_send_mail():
                     Source='je.bautista10@uniandes.edu.co',
                 )
                 end = datetime.datetime.utcnow()
-                print((end-start).total_seconds())
+                dynamodb.put_item(
+                    TableName='modelo-d',
+                    Item={
+                        'origen': {'S': str(diseno_id)},
+                        'fecha': {'S': str(datetime.datetime.utcnow())},
+                        'tiempo': {'N': str((end-start).total_seconds())}
+                    }
+                )
                 # Let the queue know that the message is processed
                 sqs = resource('sqs')
                 message = sqs.Message(
