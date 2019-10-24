@@ -16,10 +16,11 @@ from PIL import Image, ImageDraw, ImageFont
 
 from backApp.models import Diseno
 
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        
+
         logger = get_task_logger(__name__)
 
         s3_images_bucket = 'designmatch-grupo2'
@@ -45,21 +46,22 @@ class Command(BaseCommand):
                     diseno = Diseno.get_id(diseno_id)['Items'][0]
                     s3 = resource('s3')
                     s3.Bucket(s3_images_bucket).download_file(
-                        diseno['archivo'], '/tmp/'+diseno['archivo'])
-                    img = Image.open('/tmp/'+diseno['archivo'], "r")
-                    imgResize = img.resize((800, 600), Image.ANTIALIAS)
-                    draw = ImageDraw.Draw(imgResize)
+                        diseno['archivo'], '/tmp/' +
+                            diseno['archivo'].replace('noProcesado/', '')
+                    img=Image.open('/tmp/'+diseno['archivo'], "r")
+                    imgResize=img.resize((800, 600), Image.ANTIALIAS)
+                    draw=ImageDraw.Draw(imgResize)
                     draw.text((0, 580), "{0} {1} {2}".format(
                         diseno['nombre'], diseno['apellido'], diseno['fecha']), (0, 0, 0))
-                    in_mem_file = io.BytesIO()
+                    in_mem_file=io.BytesIO()
                     imgResize.save(in_mem_file, format='JPEG')
-                    nombre = diseno['archivo'].replace(
+                    nombre=diseno['archivo'].replace(
                         'noProcesado/', 'disponible/')
                     try:
-                        file_object = resource('s3').Object(
+                        file_object=resource('s3').Object(
                             s3_images_bucket, nombre).last_modified
-                        file_root, file_ext = os.path.splitext(nombre)
-                        new_name = '{0}{1}{2}{3}'.format(
+                        file_root, file_ext=os.path.splitext(nombre)
+                        new_name='{0}{1}{2}{3}'.format(
                             file_root, '_', get_random_string(), file_ext)
                         resource('s3').Bucket(s3_images_bucket).put_object(
                             Body=in_mem_file,
@@ -93,7 +95,7 @@ class Command(BaseCommand):
                             diseno['email'],
                             'Disponible')
 
-                    response = connection.send_email(
+                    response=connection.send_email(
                         Destination={
                             'ToAddresses': [diseno['email']]
                         },
@@ -112,7 +114,7 @@ class Command(BaseCommand):
                         },
                         Source='je.bautista10@uniandes.edu.co',
                     )
-                    end = datetime.datetime.utcnow()
+                    end=datetime.datetime.utcnow()
                     dynamodb.put_item(
                         TableName='modelo-d',
                         Item={
@@ -122,7 +124,7 @@ class Command(BaseCommand):
                         }
                     )
                     # Let the queue know that the message is processed
-                    sqs = resource('sqs')
-                    message = sqs.Message(
+                    sqs=resource('sqs')
+                    message=sqs.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
