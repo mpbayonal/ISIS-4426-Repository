@@ -468,14 +468,14 @@ def login(request):
                 return HttpResponse(json.dumps(dict(
                 key=tokenCache)))
 
-        if bcrypt.checkpw(password, empresaCache[1].encode('utf-8')) == False:
+        if bcrypt.checkpw(password, empresaCache['password'].encode('utf-8')) == False:
 
             return HttpResponse(status=401)
 
 
         else:
             return HttpResponse(json.dumps(dict(
-                key=empresaCache[0])))
+                key=empresaCache['token'])))
 
 
 
