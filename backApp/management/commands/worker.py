@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     s3 = resource('s3')
                     s3.Bucket(s3_images_bucket).download_file(
                         diseno['archivo'], '/tmp/' +
-                            diseno['archivo'].replace('noProcesado/', '')
+                            diseno['archivo'].replace('noProcesado/', ''))
                     img=Image.open('/tmp/'+diseno['archivo'], "r")
                     imgResize=img.resize((800, 600), Image.ANTIALIAS)
                     draw=ImageDraw.Draw(imgResize)
