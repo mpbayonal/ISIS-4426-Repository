@@ -19,14 +19,14 @@ logger = get_task_logger(__name__)
 s3_images_bucket = 'designmatch-grupo2'
 
 dynamodb = client('dynamodb', 'us-east-1',
-                  aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-                  aws_secret_access_key=os.getenv('AWS_SECRET_KEY'))
+                  aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                  aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 
 connection = client(
     'ses',
     'us-east-1',
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY'),
-    aws_secret_access_key=os.getenv('AWS_SECRET_KEY')
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
 
