@@ -240,6 +240,10 @@ def get_urlEmpresa_email(request, pEmail):
 
             )))
 
+@csrf_exempt
+def health(request):
+    return HttpResponse()
+
 
 def save_diseno(data, image, name):
     nuevoDiseño = Diseno()
