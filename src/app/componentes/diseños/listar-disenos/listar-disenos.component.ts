@@ -12,8 +12,8 @@ export class ListarDisenosComponent implements OnInit {
 
   disenos: any = [];
 
-  pageSize = 10;
-  pageNumber = 1;
+  page_size = 10;
+  page_number = 1;
   constructor(
     private diseñosService: DiseñoService,
     private rutaActiva: ActivatedRoute,
@@ -37,7 +37,7 @@ export class ListarDisenosComponent implements OnInit {
     this.router.navigate(['empresa/proyectos/diseños/' + id]);
   }
   handlePage(e: PageEvent) {
-    this.pageSize = e.pageSize;
-    this.pageNumber = e.pageIndex + 1;
+    this.page_size = e.pageSize;
+    this.page_number = e.pageIndex + 1;
   }
 }

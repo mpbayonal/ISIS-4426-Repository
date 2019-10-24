@@ -47,7 +47,7 @@ export class ListarProyectosComponent implements OnInit {
           this.proyectos = res;
           console.log(this.proyectos);
         }, err => console.log(err)
-      )
+      );
 
     }
   }
@@ -62,12 +62,12 @@ export class ListarProyectosComponent implements OnInit {
     this.proyectosService.eliminarProyecto(id).subscribe(
       res => {
         this.flashMessagesService.show('proyecto eliminado exitosamente', { cssClass: 'alert-success', timeout: 6000 });
-        location.reload()
+        location.reload();
         this.router.navigate(['empresa/' + localStorage.getItem('url') + '/proyectos/']);
 
       },
       err => console.log(err)
-    )
+    );
   }
   formularioEditar(id) {
     this.router.navigate(['empresa/proyectos/' + id + '/editar']);
