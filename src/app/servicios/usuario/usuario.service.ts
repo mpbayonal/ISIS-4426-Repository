@@ -17,7 +17,7 @@ export class UsuarioService {
   }
 
   loginUsuario(usuario) {
-    return this.http.post(`${API_URI}/auth/login/`, usuario);
+    return this.http.post(`${API_URI}/auth/`, usuario);
   }
 
   signUpUsuario(usuario) {

@@ -32,11 +32,12 @@ export class LoginComponent implements OnInit {
     return localStorage.getItem('usuario');
   }
   login() {
-    this.usuarioService.getUrl(this.usuario.username).subscribe(
+    this.usuarioService.getUrl(this.usuario.email).subscribe(
       data2 => {
         this.credenciales = data2;
         localStorage.setItem('url', this.credenciales.url);
         localStorage.setItem('id', this.credenciales.id);
+        localStorage.setItem('email', this.credenciales.email);
       }
     )
     this.usuarioService.loginUsuario(this.usuario).subscribe(

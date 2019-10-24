@@ -25,7 +25,7 @@ export class AgregarProyectoComponent implements OnInit {
   };
 
   agregarProyecto() {
-    this.proyectoService.agregarProyecto(this.proyecto, localStorage.getItem('id')).subscribe(
+    this.proyectoService.agregarProyecto(this.proyecto, localStorage.getItem('email')).subscribe(
       res => {
         this.flashMessagesService.show('proyecto agregado exitosamente', { cssClass: 'alert-success', timeout: 6000 });
         this.router.navigate(['empresa/' + localStorage.getItem('url') + '/proyectos']);

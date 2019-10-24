@@ -22,12 +22,12 @@
                         </div>
                         <div class="form-group" *ngIf="isLogged">
                             <label> Original</label>
-                            <img [src]= "diseno.archivo.replace(':8000','')"> 
+                            <img [src]= "'http://d3bat4moa1jex.cloudfront.net/'+diseno.archivo"> 
                                 
                         </div>
                         <div class="form-group" >
                                 <label> Modificada</label>
-                                <img [src]= "diseno.url_archivo_modificado.replace(':8000','')"> 
+                                <img [src]= "'http://d3bat4moa1jex.cloudfront.net/'+diseno.url_archivo"> 
                     </div>
                     </form>
                 </div>

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backend_url: 'localhost:8000/'
+  backend_url: 'http://web-d-lb-1545301051.us-east-1.elb.amazonaws.com/api'
 };
 
 /*

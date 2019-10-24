@@ -13,7 +13,7 @@ export class ProyectoService {
 
 
   getProyectos(empresa: string) {
-    return this.http.get(`${API_URI}/proyecto/${empresa}`);
+    return this.http.get(`${API_URI}/proyecto/${empresa}/`);
   }
   agregarProyecto(proyecto, empresa) {
     return this.http.post(`${API_URI}/proyectos/${empresa}/crear/`, proyecto);
@@ -22,7 +22,7 @@ export class ProyectoService {
     return this.http.put(`${API_URI}/proyectos/${idProyecto}/`, proyecto);
   }
   eliminarProyecto(idProyecto) {
-    return this.http.delete(`${API_URI}/proyectos/${idProyecto}`);
+    return this.http.post(`${API_URI}/proyectos/${idProyecto}/`, {});
   }
   getProyecto(id) {
     return this.http.get(`${API_URI}/proyectos/${id}/`);
