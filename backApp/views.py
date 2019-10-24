@@ -11,6 +11,7 @@ from django.views.generic import TemplateView
 from django.core import serializers
 from django.utils.crypto import get_random_string
 from rest_framework.utils import json
+from django.core.cache import caches
 
 from . import serializers
 from .models import *
@@ -47,22 +48,52 @@ def getDisenoById(request, pk):
         if diseno['Count'] < 1:
             return HttpResponse(status=404)
 
+
         else:
-            return HttpResponse(diseno['Items'][0])
+
+            return HttpResponse(
+
+                json.dumps(dict(
+
+                    id=diseno['Items'][0]['id'],
+                    nombre=diseno['Items'][0]['nombre'],
+                    apellido=diseno['Items'][0]['apellido'],
+                    archivo=diseno['Items'][0]['archivo'],
+                    email=diseno['Items'][0]['email'],
+                    fecha=diseno['Items'][0]['fecha'],
+                    url_archivo=diseno['Items'][0]['url_archivo'],
+                    pago=diseno['Items'][0]['pago'],
+                    estado=diseno['Items'][0]['estado']
+
+                ))
+
+            )
 
 #     path('proyectos/<pk>/', views.getProyectoById),
+
 
 
 @csrf_exempt
 def getProyectoById(request, pk):
     if request.method == 'GET':
         proyecto = Proyecto.get_id(pk)
+        print(proyecto)
 
         if proyecto['Count'] < 1:
             return HttpResponse(status=404)
 
         else:
-            return HttpResponse(proyecto['Items'])
+            return HttpResponse(
+                json.dumps(dict(
+                    empresa=proyecto['Items'][0]['empresa'],
+                    nombre=proyecto['Items'][0]['nombre'],
+                    pago=int(proyecto['Items'][0]['pago']),
+                    descripcion=proyecto['Items'][0]['descripcion'],
+                    id=proyecto['Items'][0]['id']))
+            )
+
+
+
 
 
 #     path('proyectos/<pk>/editar/', views.editar_proyecto),
@@ -87,9 +118,13 @@ def editar_proyecto(request, pk):
             empresa = body['empresa']
             proyecto = Proyecto.update(descripcion, nombre, pago, pk, empresa)
 
-            data = serializers.serialize("json", proyecto)
 
-            return HttpResponse(data)
+            return HttpResponse(json.dumps(dict(
+                empresa=empresa,
+                nombre=nombre,
+                pago=pago,
+                descripcion=descripcion,
+                id = pk)))
 
 
 #     path('proyectos/<int:pk>/eliminar/', views.eliminar_proyecto),
@@ -123,12 +158,29 @@ def get_proyectos_Url(request, urlLink):
         else:
             id_Empresa = user['Items'][0]['id']
             print(id_Empresa)
-            proyectos = Proyecto.get_idEmpresa(id_Empresa)['Items']
+            proyectos = Proyecto.get_idEmpresa(id_Empresa)
+            proyectosUrl = []
+            for proyecto in proyectos['Items']:
+                proyectoActual = dict(
+                    empresa=proyecto['empresa'],
+                    nombre=proyecto['nombre'],
+                    pago=int(proyecto['pago']),
+                    descripcion=proyecto['descripcion'],
+                    id=proyecto['id']
+                )
+                proyectosUrl.append(proyectoActual)
 
-            return HttpResponse(proyectos)
+            return HttpResponse(json.dumps(proyectosUrl))
 
 
 #     path('disenos/<int:proyecto_id>/', views.get_diseno_proyecto),
+
+
+
+
+
+
+
 @csrf_exempt
 def get_diseno_proyecto(request, proyecto_id):
 
@@ -141,7 +193,23 @@ def get_diseno_proyecto(request, proyecto_id):
         else:
             disenos = Diseno.get_diseno_proyecto(proyecto_id)
             print(disenos)
-            return HttpResponse(disenos['Items'])
+            disenosProyecto = []
+            for diseno in disenos['Items']:
+                disenoActual = dict(
+                    id=diseno['id'],
+                    nombre=diseno['nombre'],
+                    apellido=diseno['apellido'],
+                    archivo=diseno['archivo'],
+                    email=diseno['email'],
+                    fecha=diseno['fecha'],
+                    url_archivo=diseno['url_archivo'],
+                    pago=diseno['pago'],
+                    estado=diseno['estado']
+
+                )
+                disenosProyecto.append(disenoActual)
+
+            return HttpResponse(json.dumps(disenosProyecto))
 
 
 #     path('user/<pEmail>/', views.get_url_email),
@@ -151,12 +219,26 @@ def get_urlEmpresa_email(request, pEmail):
     if request.method == 'GET':
         empresa = UserCustom.get_email(pEmail)
 
-        print(empresa)
+
+
         if empresa['Count'] < 1:
             return HttpResponse(status=404)
 
         else:
-            return HttpResponse(empresa['Items'])
+
+            username = empresa['Items'][0]['username']
+            url = empresa['Items'][0]['url']
+            email = empresa['Items'][0]['email']
+            id = empresa['Items'][0]['id']
+
+
+            return HttpResponse(json.dumps(dict(
+                username=username,
+                email=email,
+                url=url,
+                id = id
+
+            )))
 
 
 def save_diseno(data, image, name):
@@ -174,6 +256,13 @@ def save_diseno(data, image, name):
     )
     nuevoDiseño.save()
     return nuevoDiseño
+
+def proyectoSerializer(proyecto):
+    return json.dumps(dict(
+            empresa=proyecto.empresa,
+            nombre=proyecto.nombre,
+            pago=proyecto.pago,
+            descripcion=proyecto.descripcion))
 
 #     path('diseno/', views.send_diseno),
 @csrf_exempt
@@ -238,6 +327,8 @@ def send_proyecto(request, email_empresa):
         body = json.loads(body_unicode)
         print(body)
 
+
+
         if empresa['Count'] < 1:
             return HttpResponse(status=404)
 
@@ -251,13 +342,23 @@ def send_proyecto(request, email_empresa):
             nuevoProyecto.descripcion = body['descripcion']
 
             nuevoProyecto.save()
-            data = serializers.serialize("json", nuevoProyecto)
+
             print(nuevoProyecto)
 
-            return HttpResponse(data)
+            return HttpResponse(json.dumps(dict(
+                empresa=nuevoProyecto.empresa,
+                nombre=nuevoProyecto.nombre,
+                pago=nuevoProyecto.pago,
+                descripcion=nuevoProyecto.descripcion,
+                id = nuevoProyecto.id)))
+
+
+
+
+
 
 # path('auth/signup/', views.registro),
-@csrf_exempt
+@ csrf_exempt
 def registro(request):
 
     if request.method == 'POST':
@@ -285,46 +386,103 @@ def registro(request):
             empresa2.email = body['email']
             empresa2.save()
 
-            data = serializers.serialize("json", empresa2)
-            print(data)
-            return HttpResponse(data)
+
+            return HttpResponse(json.dumps(dict(
+                username=body['username'],
+                email = body['email'],
+                url = empresa2.url,
+                id = empresa2.id
+
+            )))
 
 #path('auth/', views.login),
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
+
+
+
         body_unicode = request.body.decode('utf-8')
-
         body = json.loads(body_unicode)
-        empresa = UserCustom.get_email(body['email'])
+        cache = caches['default']
 
-        if empresa['Count'] < 1:
-            return HttpResponse(status=404)
-
+        empresaCache = cache.get(body['email'])
         password = body['password'].encode('utf-8')
 
-        passwordHash = empresa['Items'][0]['password'].value
 
-        if bcrypt.checkpw(password, passwordHash) == False:
+
+
+        if empresaCache == None:
+            empresa = UserCustom.get_email(body['email'])
+            if empresa['Count'] < 1:
+                return HttpResponse(status=404)
+
+
+
+
+
+
+            passwordHash = empresa['Items'][0]['password'].value
+            passwordHash2 = empresa['Items'][0]['password'].value.decode('utf-8')
+            print(passwordHash2)
+
+
+            if bcrypt.checkpw(password, passwordHash) == False:
+                return HttpResponse(status=401)
+
+            else:
+
+                payload = {
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=900),
+                    'iat': datetime.datetime.utcnow(),
+                    'sub': empresa['Items'][0]['id']
+                }
+                token = jwt.encode(
+                    payload,
+                    settings.SECRET_KEY,
+                    algorithm='HS256'
+                )
+                tokenCache = token.decode('utf-8')
+
+
+                emailCache =body['email']
+                # payload = jwt.decode(auth_token, settings.SECRET_KEY)
+
+                print(body['email'])
+
+
+
+                caches['default'].set(emailCache, dict(token = tokenCache, password = passwordHash2), 3600)
+
+                UserCustom.update(empresa['Items'][0]['email'], 'token', token)
+
+                empresaCache = caches['default'].get(body['email'])
+
+
+                print(empresaCache)
+
+                return HttpResponse(json.dumps(dict(
+                key=tokenCache)))
+
+        if bcrypt.checkpw(password, empresaCache[1].encode('utf-8')) == False:
+
             return HttpResponse(status=401)
 
+
         else:
+            return HttpResponse(json.dumps(dict(
+                key=empresaCache[0])))
 
-            payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=900),
-                'iat': datetime.datetime.utcnow(),
-                'sub': empresa['Items'][0]['id']
-            }
-            token = jwt.encode(
-                payload,
-                settings.SECRET_KEY,
-                algorithm='HS256'
-            )
 
-            #payload = jwt.decode(auth_token, settings.SECRET_KEY)
 
-            UserCustom.update(empresa['Items'][0]['email'], 'token', token)
 
-            print(empresa)
 
-            return HttpResponse(empresa['Items'])
+
+
+
+
+
+
+
+
+
