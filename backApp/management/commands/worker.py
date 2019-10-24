@@ -55,6 +55,7 @@ class Command(BaseCommand):
                         diseno['nombre'], diseno['apellido'], diseno['fecha']), (0, 0, 0))
                     in_mem_file=io.BytesIO()
                     imgResize.save(in_mem_file, format='JPEG')
+                    in_mem_file.seek(0)
                     nombre=diseno['archivo'].replace(
                         'noProcesado/', 'disponible/')
                     try:
