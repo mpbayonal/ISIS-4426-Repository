@@ -15,7 +15,7 @@ export class DiseñoService {
     return this.http.get(`${API_URI}/disenos/${proyecto}/`);
   }
   createDiseno(diseno) {
-    return this.http.post(`${API_URI}/diseno/`, diseno);
+    return this.http.post(`${API_URI}/enviar/`, diseno);
   }
   getDisenoId(id) {
     return this.http.get(`${API_URI}/diseno/${id}/`);
