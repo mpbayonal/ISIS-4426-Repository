@@ -111,7 +111,7 @@ def process_image_and_send_mail():
                             'Data': 'DesignMatch: Tus diseños ya están disponibles',
                         },
                     },
-                    Source='je.bautista10@uniandes.edu.co',
+                    Source='ga.bejarano10@uniandes.edu.co',
                 )
                 end = datetime.datetime.utcnow()
                 dynamodb.put_item(
