@@ -49,6 +49,7 @@ class Command(BaseCommand):
                 for message in response['Messages']:
                     end = datetime.datetime.utcnow()
                     dynamodb.put_item(
+                    diseno_id = message['Body']
                         TableName='modelo-d',
                         Item={
                             'origen': {'S': str(diseno_id)},
@@ -56,7 +57,6 @@ class Command(BaseCommand):
                             'tiempo': {'N': str((end-inicio).total_seconds())}
                         }
                     )
-                    diseno_id = message['Body']
                     diseno = Diseno.get_id(diseno_id)['Items'][0]
                     s3 = resource('s3')
                     s3.Bucket(s3_images_bucket).download_file(
