@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 import datetime
+from datetime import timedelta  
 import io
 import os
 
@@ -37,16 +38,16 @@ class Command(BaseCommand):
         )
 
         sqs = client('sqs', 'us-east-1')
-        base = datetime.datetime.utcnow().total_seconds
+        base = timedelta(seconds=0) 
         cuantos = 0;
         ya = False
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
             if 'Messages' in response:
-                inicio = datetime.datetime.utcnow().total_seconds + base
+                inicio = datetime.datetime.utcnow() + base
                 for message in response['Messages']:
-                    end = datetime.datetime.utcnow().total_seconds
+                    end = datetime.datetime.utcnow()
                     dynamodb.put_item(
                         TableName='modelo-d',
                         Item={
@@ -131,7 +132,7 @@ class Command(BaseCommand):
                     message = sqs.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
-                    if ya == False and end-inicio >= 60:
+                    if ya == False and (end-inicio).total_seconds >= 60:
                         dynamodb.put_item(
                             TableName='cuantos-d',
                             Item={
@@ -139,4 +140,4 @@ class Command(BaseCommand):
                             }
                         )
                         ya = True
-                base = end-inicio
+                base = timedelta(seconds=(end-inicio).total_seconds)
