@@ -37,7 +37,7 @@ class Command(BaseCommand):
         )
         base = 0
         cuantos = 0;
-        ya = false
+        ya = False
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
