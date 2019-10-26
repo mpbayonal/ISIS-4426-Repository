@@ -33,33 +33,6 @@ connection = client(
 
 sqs = client('sqs', 'us-east-1')
 
-iid = 1
-iid_lock = Lock()
-
-
-class counter(Thread):
-    def __init__(self):
-        Thread.__init__(self)
-
-    def run(self):
-        global iid
-        with iid_lock:
-            iid += 1
-
-
-class cuantos(Thread):
-    def __init__(self):
-        Thread.__init__(self, cuenta)
-        self.cuenta = cuenta
-
-    def run(self):
-        dynamodb.put_item(
-            TableName='cuantos-d',
-            Item={
-                'cuantos': {'N': str(cuenta)}
-            }
-        )
-
 
 @task(
     name="send_feedback_email_task",
@@ -67,6 +40,7 @@ class cuantos(Thread):
 )
 def process_image_and_send_mail():
     base = 0
+    cuantos = 0;
     ya = false
     while True:
         response = sqs.receive_message(
@@ -75,6 +49,14 @@ def process_image_and_send_mail():
             inicio = datetime.datetime.utcnow() + base
             for message in response['Messages']:
                 end = datetime.datetime.utcnow()
+                dynamodb.put_item(
+                    TableName='modelo-d',
+                    Item={
+                        'origen': {'S': str(diseno_id)},
+                        'fecha': {'S': str(datetime.datetime.utcnow())},
+                        'tiempo': {'N': str((end-inicio).total_seconds())}
+                    }
+                )
                 diseno_id = message['Body']
                 diseno = Diseno.get_id(diseno_id)['Items'][0]
                 s3 = resource('s3')
@@ -146,23 +128,17 @@ def process_image_and_send_mail():
                     },
                     Source='ga.bejarano10@uniandes.edu.co',
                 )
-                dynamodb.put_item(
-                    TableName='modelo-d',
-                    Item={
-                        'origen': {'S': str(diseno_id)},
-                        'fecha': {'S': str(datetime.datetime.utcnow())},
-                        'tiempo': {'N': str((end-start).total_seconds())}
-                    }
-                )
                 # Let the queue know that the message is processed
                 sqs = resource('sqs')
                 message = sqs.Message(
                     'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                 message.delete()
-                mythread = counter()
-                mythread.start()
                 if ya == False and (end-inicio).total_seconds >= 60:
-                    mythread = cuenta()
-                    mythread.start()
+                    dynamodb.put_item(
+                        TableName='cuantos-d',
+                        Item={
+                            'cuantos': {'N': str(cuenta)}
+                        }
+                    )
                     ya = True
             base = end-inicio
