@@ -48,8 +48,8 @@ class Command(BaseCommand):
                 inicio = datetime.datetime.utcnow() + base
                 for message in response['Messages']:
                     end = datetime.datetime.utcnow()
-                    dynamodb.put_item(
                     diseno_id = message['Body']
+                    dynamodb.put_item(
                         TableName='modelo-d',
                         Item={
                             'origen': {'S': str(diseno_id)},
