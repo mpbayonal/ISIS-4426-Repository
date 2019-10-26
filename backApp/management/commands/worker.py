@@ -37,16 +37,16 @@ class Command(BaseCommand):
         )
 
         sqs = client('sqs', 'us-east-1')
-        base = datetime.datetime.utcnow()
+        base = datetime.datetime.utcnow().total_seconds
         cuantos = 0;
         ya = False
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
             if 'Messages' in response:
-                inicio = datetime.datetime.utcnow() + base
+                inicio = datetime.datetime.utcnow().total_seconds + base
                 for message in response['Messages']:
-                    end = datetime.datetime.utcnow()
+                    end = datetime.datetime.utcnow().total_seconds
                     dynamodb.put_item(
                         TableName='modelo-d',
                         Item={
@@ -131,7 +131,7 @@ class Command(BaseCommand):
                     message = sqs.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
-                    if ya == False and (end-inicio).total_seconds >= 60:
+                    if ya == False and end-inicio >= 60:
                         dynamodb.put_item(
                             TableName='cuantos-d',
                             Item={
