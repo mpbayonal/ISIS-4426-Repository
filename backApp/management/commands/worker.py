@@ -38,25 +38,22 @@ class Command(BaseCommand):
         )
 
         sqs = client('sqs', 'us-east-1')
-        base = timedelta(seconds=0) 
         cuantos = 0;
         ya = False
+        ya_inicio = False
+        anterior
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
             if 'Messages' in response:
-                inicio = datetime.datetime.utcnow() + base
+                if ya_inicio == False:
+                    inicio = datetime.datetime.utcnow()
+                    anterior = inicio
+                    ya_inicio = True
+                else:
+                    inicio = anterior
                 for message in response['Messages']:
-                    end = datetime.datetime.utcnow()
                     diseno_id = message['Body']
-                    dynamodb.put_item(
-                        TableName='modelo-d',
-                        Item={
-                            'origen': {'S': str(diseno_id)},
-                            'fecha': {'S': str(datetime.datetime.utcnow())},
-                            'tiempo': {'N': str((end-inicio).total_seconds())}
-                        }
-                    )
                     diseno = Diseno.get_id(diseno_id)['Items'][0]
                     s3 = resource('s3')
                     s3.Bucket(s3_images_bucket).download_file(
@@ -128,6 +125,15 @@ class Command(BaseCommand):
                         Source='ga.bejarano10@uniandes.edu.co',
                     )
                     # Let the queue know that the message is processed
+                    end = datetime.datetime.utcnow()
+                    dynamodb.put_item(
+                        TableName='modelo-d',
+                        Item={
+                            'origen': {'S': str(diseno_id)},
+                            'fecha': {'S': str(datetime.datetime.utcnow())},
+                            'tiempo': {'N': str((end-inicio).total_seconds())}
+                        }
+                    )
                     sqs = resource('sqs')
                     message = sqs.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
@@ -140,4 +146,4 @@ class Command(BaseCommand):
                             }
                         )
                         ya = True
-                base = timedelta(seconds=(end-inicio).total_seconds)
+                inicio = end
