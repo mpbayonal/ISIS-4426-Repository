@@ -2,6 +2,8 @@ import datetime
 import io
 import os
 
+from threading import Lock, Thread
+
 from django.utils.crypto import get_random_string
 from boto3 import client, resource
 
@@ -29,19 +31,50 @@ connection = client(
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
+sqs = client('sqs', 'us-east-1')
+
+iid = 1
+iid_lock = Lock()
+
+
+class counter(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+
+    def run(self):
+        global iid
+        with iid_lock:
+            iid += 1
+
+
+class cuantos(Thread):
+    def __init__(self):
+        Thread.__init__(self, cuenta)
+        self.cuenta = cuenta
+
+    def run(self):
+        dynamodb.put_item(
+            TableName='cuantos-d',
+            Item={
+                'cuantos': {'N': str(cuenta)}
+            }
+        )
+
 
 @task(
     name="send_feedback_email_task",
     ignore_result=True
 )
 def process_image_and_send_mail():
+    base = 0
+    ya = false
     while True:
-        sqs = client('sqs', 'us-east-1')
         response = sqs.receive_message(
             QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
         if 'Messages' in response:
+            inicio = datetime.datetime.utcnow() + base
             for message in response['Messages']:
-                start = datetime.datetime.utcnow()
+                end = datetime.datetime.utcnow()
                 diseno_id = message['Body']
                 diseno = Diseno.get_id(diseno_id)['Items'][0]
                 s3 = resource('s3')
@@ -113,7 +146,6 @@ def process_image_and_send_mail():
                     },
                     Source='ga.bejarano10@uniandes.edu.co',
                 )
-                end = datetime.datetime.utcnow()
                 dynamodb.put_item(
                     TableName='modelo-d',
                     Item={
@@ -127,3 +159,10 @@ def process_image_and_send_mail():
                 message = sqs.Message(
                     'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                 message.delete()
+                mythread = counter()
+                mythread.start()
+                if ya == False and (end-inicio).total_seconds >= 60:
+                    mythread = cuenta()
+                    mythread.start()
+                    ya = True
+            base = end-inicio
