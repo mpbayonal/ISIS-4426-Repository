@@ -32,8 +32,8 @@ class Command(BaseCommand):
         connection = client(
             'ses',
             'us-east-1',
-            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+            aws_access_key_id=os.getenv('AWS_GUSTAVO_ID'),
+            aws_secret_access_key=os.getenv('AWS_GUSTAVO_SECRET')
         )
         while True:
             sqs = client('sqs', 'us-east-1')
