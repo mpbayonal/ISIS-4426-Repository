@@ -35,6 +35,8 @@ class Command(BaseCommand):
             aws_access_key_id=os.getenv('AWS_GUSTAVO_ID'),
             aws_secret_access_key=os.getenv('AWS_GUSTAVO_SECRET')
         )
+        
+        sqs = client('sqs', 'us-east-1')
         base = 0
         cuantos = 0;
         ya = False
