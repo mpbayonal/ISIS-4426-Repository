@@ -137,8 +137,8 @@ class Command(BaseCommand):
                             'tiempo': {'N': str((end-inicio).total_seconds())}
                         }
                     )
-                    sqs = resource('sqs', 'us-east-1')
-                    message = sqs.Message(
+                    sqsr = resource('sqs', 'us-east-1')
+                    message = sqsr.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
                     if ya == False and (end-inicio).total_seconds() >= 60:
