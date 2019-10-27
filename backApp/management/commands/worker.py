@@ -141,11 +141,12 @@ class Command(BaseCommand):
                     message = sqsr.Message(
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
+                    cuantos = cuantos + 1
                     if ya == False and (end-inicio).total_seconds() >= 60:
                         dynamodb.put_item(
                             TableName='cuantos-d',
                             Item={
-                                'cuantos': {'N': str(cuenta)}
+                                'cuantos': {'N': str(cuantos)}
                             }
                         )
                         ya = True
