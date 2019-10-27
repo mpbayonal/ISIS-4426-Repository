@@ -19,10 +19,10 @@ export class ProyectoService {
     return this.http.post(`${API_URI}/proyectos/${empresa}/crear/`, proyecto);
   }
   editarProyecto(proyecto, idProyecto) {
-    return this.http.put(`${API_URI}/proyectos/${idProyecto}/`, proyecto);
+    return this.http.put(`${API_URI}/proyectos/${idProyecto}/editar/`, proyecto);
   }
   eliminarProyecto(idProyecto) {
-    return this.http.post(`${API_URI}/proyectos/${idProyecto}/`, {});
+    return this.http.post(`${API_URI}/proyectos/${idProyecto}/eliminar/`, {});
   }
   getProyecto(id) {
     return this.http.get(`${API_URI}/proyectos/${id}/`);
