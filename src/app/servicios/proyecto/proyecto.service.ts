@@ -22,7 +22,7 @@ export class ProyectoService {
     return this.http.put(`${API_URI}/proyectos/${idProyecto}/`, proyecto);
   }
   eliminarProyecto(idProyecto) {
-    return this.http.delete(`${API_URI}/proyectos/${idProyecto}`);
+    return this.http.delete(`${API_URI}/proyectos/${idProyecto}/`);
   }
   getProyecto(id) {
     return this.http.get(`${API_URI}/proyectos/${id}/`);
