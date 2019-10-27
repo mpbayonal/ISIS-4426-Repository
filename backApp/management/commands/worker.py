@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 import datetime
-from datetime import timedelta  
+from datetime import timedelta
 import io
 import os
 
@@ -27,8 +27,8 @@ class Command(BaseCommand):
         s3_images_bucket = 'designmatch-grupo2'
 
         dynamodb = client('dynamodb', 'us-east-1',
-                        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+                          aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                          aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 
         connection = client(
             'ses',
@@ -38,10 +38,10 @@ class Command(BaseCommand):
         )
 
         sqs = client('sqs', 'us-east-1')
-        cuantos = 0;
+        cuantos = 0
         ya = False
         ya_inicio = False
-        anterior = datetime.datetime.utcnow()
+        anterior = ydatetime.datetime.utcnow()
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
@@ -57,7 +57,10 @@ class Command(BaseCommand):
                     diseno = Diseno.get_id(diseno_id)['Items'][0]
                     s3 = resource('s3')
                     s3.Bucket(s3_images_bucket).download_file(
-                        diseno['archivo'], '/tmp/'+diseno['archivo'])
+                        diseno['archivo'], '/tmp/' +
+                        diseno['archivo'].replace('noProcesado/', ''))
+                    img = Image.open(
+                        '/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
                     img = Image.open('/tmp/'+diseno['archivo'], "r")
                     imgResize = img.resize((800, 600), Image.ANTIALIAS)
                     draw = ImageDraw.Draw(imgResize)
