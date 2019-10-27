@@ -16,11 +16,23 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image, ImageDraw, ImageFont
 
 from backApp.models import Diseno
+from threading import Timer
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+
+        def cuantos_en_60():
+            dynamodb.put_item(
+                TableName='cuantos-d',
+                Item={
+                    'cuantos': {'N': str(cuantos)}
+                }
+            )
+            cuantos = 0
+            Timer(60, cuantos_en_60).start()
+
 
         logger = get_task_logger(__name__)
 
@@ -42,6 +54,7 @@ class Command(BaseCommand):
         ya = False
         ya_inicio = False
         anterior = datetime.datetime.utcnow()
+        Timer(60, cuantos_en_60).start()
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
@@ -61,7 +74,8 @@ class Command(BaseCommand):
                         diseno['archivo'].replace('noProcesado/', ''))
                     img = Image.open(
                         '/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
-                    img = Image.open('/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
+                    img = Image.open(
+                        '/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
                     imgResize = img.resize((800, 600), Image.ANTIALIAS)
                     draw = ImageDraw.Draw(imgResize)
                     draw.text((0, 580), "{0} {1} {2}".format(
@@ -142,12 +156,12 @@ class Command(BaseCommand):
                         'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
                     message.delete()
                     cuantos = cuantos + 1
-                    if ya == False and (end-inicio).total_seconds() >= 60:
+                    if (end-inicio).total_seconds() % 60 == 0:
                         dynamodb.put_item(
                             TableName='cuantos-d',
                             Item={
                                 'cuantos': {'N': str(cuantos)}
                             }
                         )
-                        ya = True
+                        cuantos = 0
                 inicio = end
