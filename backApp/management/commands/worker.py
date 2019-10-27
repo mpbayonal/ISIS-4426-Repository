@@ -41,7 +41,7 @@ class Command(BaseCommand):
         cuantos = 0;
         ya = False
         ya_inicio = False
-        anterior
+        anterior = datetime.datetime.utcnow()
         while True:
             response = sqs.receive_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
