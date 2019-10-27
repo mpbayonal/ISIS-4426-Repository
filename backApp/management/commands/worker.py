@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 for message in response['Messages']:
                     diseno_id = message['Body']
                     diseno = Diseno.get_id(diseno_id)['Items'][0]
-                    s3 = resource('s3')
+                    s3 = resource('s3', 'us-east-1')
                     s3.Bucket(s3_images_bucket).download_file(
                         diseno['archivo'], '/tmp/' +
                         diseno['archivo'].replace('noProcesado/', ''))
