@@ -61,7 +61,7 @@ class Command(BaseCommand):
                         diseno['archivo'].replace('noProcesado/', ''))
                     img = Image.open(
                         '/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
-                    img = Image.open('/tmp/'+diseno['archivo'], "r")
+                    img = Image.open('/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
                     imgResize = img.resize((800, 600), Image.ANTIALIAS)
                     draw = ImageDraw.Draw(imgResize)
                     draw.text((0, 580), "{0} {1} {2}".format(
