@@ -19,7 +19,7 @@ export class ProyectoService {
     return this.http.post(`${API_URI}/proyectos/${empresa}/crear/`, proyecto);
   }
   editarProyecto(proyecto, idProyecto) {
-    return this.http.put(`${API_URI}/proyectos/${idProyecto}/editar/`, proyecto);
+    return this.http.post(`${API_URI}/proyectos/${idProyecto}/editar/`, proyecto);
   }
   eliminarProyecto(idProyecto) {
     return this.http.post(`${API_URI}/proyectos/${idProyecto}/eliminar/`, {});
