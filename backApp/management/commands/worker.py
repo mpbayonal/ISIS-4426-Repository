@@ -33,8 +33,8 @@ class Command(BaseCommand):
         connection = client(
             'ses',
             'us-east-1',
-            aws_access_key_id=os.getenv('AWS_GUSTAVO_ID'),
-            aws_secret_access_key=os.getenv('AWS_GUSTAVO_SECRET')
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
         )
 
         sqs = client('sqs', 'us-east-1')
@@ -126,7 +126,7 @@ class Command(BaseCommand):
                                 'Data': 'DesignMatch: Tus diseños ya están disponibles',
                             },
                         },
-                        Source='ga.bejarano10@uniandes.edu.co',
+                        Source='je.bautista10@uniandes.edu.co',
                     )
                     # Let the queue know that the message is processed
                     end = datetime.datetime.utcnow()
