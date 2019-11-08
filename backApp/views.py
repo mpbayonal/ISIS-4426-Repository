@@ -408,9 +408,9 @@ def login(request):
 
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        #cache = caches['default']
+        cache = caches['default']
 
-        #empresaCache = cache.get(body['email'])
+        empresaCache = cache.get(body['email'])
         empresaCache = None
         password = body['password'].encode('utf-8')
 
@@ -457,11 +457,11 @@ def login(request):
 
 
 
-                #caches['default'].set(emailCache, dict(token = tokenCache, password = passwordHash2), 3600)
+                caches['default'].set(emailCache, dict(token = tokenCache, password = passwordHash2), 3600)
 
                 UserCustom.update(empresa['Items'][0]['email'], 'token', token)
 
-                #empresaCache = caches['default'].get(body['email'])
+                empresaCache = caches['default'].get(body['email'])
 
 
                 print(empresaCache)
