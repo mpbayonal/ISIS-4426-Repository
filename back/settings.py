@@ -151,8 +151,6 @@ DATABASES = {
     }
 }
 
-django_heroku.settings(locals())
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
