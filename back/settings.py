@@ -179,9 +179,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Bogota'
 
 
-servers = os.environ['MEMCACHIER_SERVERS']
-username = os.environ['MEMCACHIER_USERNAME']
-password = os.environ['MEMCACHIER_PASSWORD']
+servers = os.environ['MEMCACHIER_GRAY_SERVERS']
+username = os.environ['MEMCACHIER_GRAY_USERNAME']
+password = os.environ['MEMCACHIER_GRAY_PASSWORD']
 
 CACHES = {
     'default': {
