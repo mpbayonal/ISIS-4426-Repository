@@ -15,7 +15,8 @@ urlpatterns = [
     path('proyectos/<email_empresa>/crear/', views.send_proyecto),
     path('auth/signup/', views.registro),
     path('auth/', views.login),
-    path('', views.health)
+    path('', views.health),
+    path('upload', views.get_upload_url)
 
 
 ]
