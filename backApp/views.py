@@ -4,8 +4,6 @@ import bcrypt
 import jwt
 import datetime
 
-from uuid import uuid4
-
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -256,6 +254,10 @@ def save_diseno(data, image, name):
     nuevoDiseño.pago = data['pago']
     nuevoDiseño.proyecto = data['proyecto']
     nuevoDiseño.archivo = name
+    resource('s3').Bucket(s3_images_bucket).put_object(
+        Body=image,
+        Key=name
+    )
     nuevoDiseño.save()
     return nuevoDiseño
 
@@ -294,7 +296,7 @@ def send_diseno(request):
             except ClientError:
                 diseno = save_diseno(
                     data, input_image, 'noProcesado/'+input_image.name)
-            send_task(diseno.id)
+            #send_task(diseno.id)
             return HttpResponse(
                 json.dumps(dict(
                     id=diseno.id,
@@ -313,7 +315,7 @@ def send_diseno(request):
 def send_task(diseno):
     sqs = client('sqs', 'us-east-1')
     sqs.send_message(
-        QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch', 
+        QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', 
         MessageBody=diseno)
 
 
@@ -476,23 +478,7 @@ def login(request):
             return HttpResponse(json.dumps(dict(
                 key=empresaCache['token'])))
 
-@csrf_exempt
-def get_upload_key():
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        upload_key = uuid4().hex
-        s3 = client('s3')
-        presigned_url = s3.generate_presigned_url(
-            ClientMethod='put_object',
-            Params={
-                'Bucket': s3_images_bucket,
-                'Key': data['key'],
-                'ContentType': data['type'],
-                'ACL': 'public-read-write'
-            }
-        )
-        return JsonResponse({"upload_url": presigned_url})
+
 
 
 
