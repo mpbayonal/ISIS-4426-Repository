@@ -34,6 +34,13 @@ export class AgregarDisenoComponent implements OnInit {
     fd.append('proyecto', this.diseno.proyecto);
     this.disenoService.createDiseno(fd).subscribe(
       res => {
+        this.disenoService.getUploadUrl({ type: this.selectedFile.type, key: res.archivo }).subscribe(url => {
+          this.disenoService.uploadfileAWSS3(url.upload_url, this.selectedFile.type, this.selectedFile).subscribe(uploadResult => {
+            if (uploadResult.hasOwnProperty('url')) {
+              const finalUrl = uploadResult.url.split('?')[0];
+            }
+          });
+        });
         this.router.navigate(['empresa/proyectos/' + this.activated.snapshot.params.idProyecto + '/disenos'])
       }, err => console.log(err)
     )
