@@ -22,8 +22,6 @@ django-stubs==1.2.0
 djangorestframework==3.10.2
 djangorestframework-stubs==0.3.0
 docutils==0.15.2
-future==0.17.1
-futures==3.3.0
 gunicorn==19.9.0
 idna==2.8
 importlib-metadata==0.20
