@@ -13,7 +13,7 @@ from django.views.generic import TemplateView
 from django.core import serializers
 from django.utils.crypto import get_random_string
 from rest_framework.utils import json
-from django.core.cache import caches
+from django.core.cache import cache
 
 from . import serializers
 from .models import *
@@ -406,7 +406,6 @@ def login(request):
 
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        cache = caches['default']
 
         empresaCache = cache.get(body['email'])
         # empresaCache = None
@@ -459,7 +458,7 @@ def login(request):
 
                 UserCustom.update(empresa['Items'][0]['email'], 'token', token)
 
-                empresaCache = caches['default'].get(body['email'])
+                empresaCache = cache.get(body['email'])
 
 
                 print(empresaCache)
