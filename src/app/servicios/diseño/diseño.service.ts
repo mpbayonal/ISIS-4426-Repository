@@ -22,7 +22,7 @@ export class DiseñoService {
     return this.http.get(`${API_URI}/diseno/${id}/`);
   }
   getUploadUrl(data): Observable<any> {
-    return this.http.post(`${API_URI}/upload/`, data);
+    return this.http.post(`${API_URI}/uploadkey/`, data);
   }
 
   uploadfileAWSS3(fileuploadurl: string, contenttype: string, file: any): Observable<any> {
