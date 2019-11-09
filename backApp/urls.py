@@ -16,7 +16,7 @@ urlpatterns = [
     path('auth/signup/', views.registro),
     path('auth/', views.login),
     path('', views.health),
-    path('upload/', views.get_upload_key)
+    path('uploadkey/', views.get_upload_key)
 
 
 ]
