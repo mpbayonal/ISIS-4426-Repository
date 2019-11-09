@@ -187,10 +187,10 @@ password = os.environ['MEMCACHEDCLOUD_PASSWORD']
 CACHES = {
     'default': {
         'BACKEND': 'django_bmemcached.memcached.BMemcached',
-        'LOCATION': os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
+        'LOCATION': servers,
         'OPTIONS': {
-                    'username': os.environ.get('MEMCACHEDCLOUD_USERNAME'),
-                    'password': os.environ.get('MEMCACHEDCLOUD_PASSWORD')
+                    'username': username,
+                    'password': password
             }
     }
 }
