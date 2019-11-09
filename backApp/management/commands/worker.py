@@ -2,7 +2,7 @@ import boto3
 from django.core.management.base import BaseCommand, CommandError
 
 import datetime
-import sendgrid
+
 from datetime import timedelta
 import io
 import os
@@ -11,6 +11,8 @@ from django.utils.crypto import get_random_string
 from boto3 import client, resource
 
 from botocore.exceptions import ClientError
+from sendgrid.helpers.mail import Mail
+from sendgrid import SendGridAPIClient
 from celery.decorators import task
 from celery.task.schedules import crontab
 from celery.utils.log import get_task_logger
@@ -125,7 +127,7 @@ class Command(BaseCommand):
                     apikey = os.environ.get('SENDGRID_API_KEY')
                     print(apikey)
 
-                    sg = sendgrid.SendGridAPIClient(apikey)
+                    sg = SendGridAPIClient(apikey)
 
                     data = {
                         "personalizations": [
@@ -135,24 +137,34 @@ class Command(BaseCommand):
                                         "email": [diseno['email']]
                                     }
                                 ],
-                                "subject": 'DesignMatch: Tus diseños ya están disponibles'
+                                "subject": "DesignMatch: Tus diseños ya están disponibles"
                             }
                         ],
                         "from": {
-                            "email": 'je.bautista10@uniandes.edu.co'
+                            "email": "mpbay"
                         },
                         "content": [
                             {
                                 "type": "text/plain",
-                                "value": 'Tu diseño ya está disponible\n\
-                                                    http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/' + diseno_id
+                                "value": "Tu diseño ya está disponible\n\
+                                                    http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/" + diseno_id
                             }
                         ]
                     }
 
-                    response = sg.client.mail.send.post(request_body=data)
+                    message = Mail(
+                        from_email='mpblatorre@gmail.com',
+                        to_emails=[diseno['email']],
+                        subject='DesignMatch: Tus diseños ya están disponibles',
+                        html_content='Tu diseño ya está disponible\n\
+                                                    http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/')
+
+                    print(message)
+
+                    response = sg.send(message)
+
+
                     print(response.status_code)
-                    print(response.body)
                     print(response.headers)
 
 
