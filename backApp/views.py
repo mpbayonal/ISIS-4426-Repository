@@ -283,7 +283,7 @@ def send_diseno(request):
             # https://designmatch-grupo2.s3.amazonaws.com/noProcesado/ffvii-remake-aerith-gold-saucer.jpg
             diseno = {}
             try:
-                file_object = resource('s3').Object(
+                file_object = resource('s3', 'us-east-1', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'] ).Object(
                     s3_images_bucket, 'noProcesado/'+input_image.name).last_modified
                 dir_name, file_name = os.path.split(input_image.name)
                 file_root, file_ext = os.path.splitext(file_name)
