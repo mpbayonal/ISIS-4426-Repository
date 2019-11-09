@@ -454,7 +454,7 @@ def login(request):
 
 
 
-                caches['default'].set(emailCache, dict(token = tokenCache, password = passwordHash2), 3600)
+                cache.set(emailCache, dict(token = tokenCache, password = passwordHash2), 3600)
 
                 UserCustom.update(empresa['Items'][0]['email'], 'token', token)
 
