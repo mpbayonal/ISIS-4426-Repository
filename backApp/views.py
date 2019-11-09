@@ -485,8 +485,8 @@ def get_upload_key(request):
             ClientMethod='put_object',
             Params={
                 'Bucket': s3_images_bucket,
-                'Key': data['key'],
-                'ContentType': data['type'],
+                'Key': body['key'],
+                'ContentType': body['type'],
                 'ACL': 'public-read-write'
             }
         )
