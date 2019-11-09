@@ -408,7 +408,7 @@ def login(request):
         body = json.loads(body_unicode)
         cache = caches['default']
 
-        empresaCache = cache.get(body['email'])
+        # empresaCache = cache.get(body['email'])
         empresaCache = None
         password = body['password'].encode('utf-8')
 
