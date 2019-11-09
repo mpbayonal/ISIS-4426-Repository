@@ -283,7 +283,7 @@ def send_diseno(request):
             # https://designmatch-grupo2.s3.amazonaws.com/noProcesado/ffvii-remake-aerith-gold-saucer.jpg
             diseno = {}
             try:
-                file_object = resource('s3').Object(
+                file_object = resource('s3', 'us-east-1', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'] ).Object(
                     s3_images_bucket, 'noProcesado/'+input_image.name).last_modified
                 dir_name, file_name = os.path.split(input_image.name)
                 file_root, file_ext = os.path.splitext(file_name)
@@ -311,7 +311,7 @@ def send_diseno(request):
 
 
 def send_task(diseno):
-    sqs = client('sqs', 'us-east-1')
+    sqs = client('sqs', 'us-east-1', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'] )
     sqs.send_message(
         QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch', 
         MessageBody=diseno)
@@ -409,7 +409,7 @@ def login(request):
         cache = caches['default']
 
         empresaCache = cache.get(body['email'])
-        empresaCache = None
+        # empresaCache = None
         password = body['password'].encode('utf-8')
 
 
@@ -482,7 +482,7 @@ def get_upload_key():
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         upload_key = uuid4().hex
-        s3 = client('s3')
+        s3 = client('s3', 'us-east-1', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'] )
         presigned_url = s3.generate_presigned_url(
             ClientMethod='put_object',
             Params={

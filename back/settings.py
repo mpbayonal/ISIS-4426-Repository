@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import json
 import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -31,10 +32,10 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.getenv('FILES')
-MEDIA_URL = os.getenv('FILES_URL')
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+MEDIA_ROOT = os.environ['FILES']
+MEDIA_URL = os.environ['FILES_URL']
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 
 AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY
@@ -171,56 +172,26 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 
-BROKER_URL = os.getenv('REDIS_URL')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
+BROKER_URL = os.environ['REDIS_URL']
+CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Bogota'
 
 
-servers = os.environ['MEMCACHIER_SERVERS']
-username = os.environ['MEMCACHIER_USERNAME']
-password = os.environ['MEMCACHIER_PASSWORD']
+servers = os.environ['MEMCACHEDCLOUD_SERVERS']
+username = os.environ['MEMCACHEDCLOUD_USERNAME']
+password = os.environ['MEMCACHEDCLOUD_PASSWORD']
 
 CACHES = {
     'default': {
-        # Use pylibmc
         'BACKEND': 'django_bmemcached.memcached.BMemcached',
-
-        # TIMEOUT is not the connection timeout! It's the default expiration
-        # timeout that should be applied to keys! Setting it to `None`
-        # disables expiration.
-        'TIMEOUT': None,
-
         'LOCATION': servers,
-
         'OPTIONS': {
-            # Use binary memcache protocol (needed for authentication)
-            'binary': True,
-            'username': username,
-            'password': password,
-            'behaviors': {
-                # Enable faster IO
-                'no_block': True,
-                'tcp_nodelay': True,
-
-                # Keep connection alive
-                'tcp_keepalive': True,
-
-                # Timeout settings
-                'connect_timeout': 2000, # ms
-                'send_timeout': 750 * 1000, # us
-                'receive_timeout': 750 * 1000, # us
-                '_poll_timeout': 2000, # ms
-
-                # Better failover
-                'ketama': True,
-                'remove_failed': 1,
-                'retry_timeout': 2,
-                'dead_timeout': 30,
+                    'username': username,
+                    'password': password
             }
-        }
     }
 }
 
