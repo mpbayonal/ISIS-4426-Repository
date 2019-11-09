@@ -1,3 +1,4 @@
+import boto3
 from django.core.management.base import BaseCommand, CommandError
 
 import datetime
@@ -38,9 +39,11 @@ class Command(BaseCommand):
         ya = False
         ya_inicio = False
         anterior = datetime.datetime.utcnow()
+
         while True:
             response = sqs.receive_message(
-                QueueUrl='https://sqs.us-east-1.amazonaws.com/923905721779/designmatch-d')
+                QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch')
+
             if 'Messages' in response:
                 if ya_inicio == False:
                     inicio = datetime.datetime.utcnow()
@@ -48,23 +51,38 @@ class Command(BaseCommand):
                     ya_inicio = True
                 else:
                     inicio = anterior
+
                 for message in response['Messages']:
                     diseno_id = message['Body']
                     diseno = Diseno.get_id(diseno_id)['Items'][0]
                     s3 = resource('s3', 'us-east-1')
-                    s3.Bucket(s3_images_bucket).download_file(
-                        diseno['archivo'], '/tmp/' +
-                        diseno['archivo'].replace('noProcesado/', ''))
+
+
+
+                    bucket =  s3.Bucket(s3_images_bucket)
+                    key = diseno['archivo']
+                    objs = list(bucket.objects.filter(Prefix=key))
+                    print(key)
+                    print(objs)
+
+
+
+
+                    s3.Bucket(s3_images_bucket).download_file( diseno['archivo'], './tmp/' + diseno['archivo'].replace('noProcesado/', ''))
+
+
+
                     img = Image.open(
-                        '/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
+                        './tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
                     img = Image.open(
-                        '/tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
+                        './tmp/'+diseno['archivo'].replace('noProcesado/', ''), "r")
                     imgResize = img.resize((800, 600), Image.ANTIALIAS)
                     draw = ImageDraw.Draw(imgResize)
                     draw.text((0, 580), "{0} {1} {2}".format(
                         diseno['nombre'], diseno['apellido'], diseno['fecha']), (0, 0, 0))
                     in_mem_file = io.BytesIO()
                     imgResize.save(in_mem_file, format='JPEG')
+                    in_mem_file.seek(0)
                     nombre = diseno['archivo'].replace(
                         'noProcesado/', 'disponible/')
                     try:
@@ -104,8 +122,10 @@ class Command(BaseCommand):
                             nombre,
                             diseno['email'],
                             'Disponible')
+                    apikey = os.environ.get('SENDGRID_API_KEY')
+                    print(apikey)
 
-                    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                    sg = sendgrid.SendGridAPIClient(apikey)
 
                     data = {
                         "personalizations": [
@@ -151,7 +171,7 @@ class Command(BaseCommand):
                     )
                     sqsr = resource('sqs', 'us-east-1')
                     message = sqsr.Message(
-                        'https://sqs.us-east-1.amazonaws.com/923905721779/designmatch-d', message['ReceiptHandle'])
+                        'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch', message['ReceiptHandle'])
                     message.delete()
                     cuantos = cuantos + 1
                     if ya == False and (end-inicio).total_seconds() >= 60:
