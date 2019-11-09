@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 import datetime
+import sendgrid
 from datetime import timedelta
 import io
 import os
@@ -27,15 +28,10 @@ class Command(BaseCommand):
         s3_images_bucket = 'designmatch-grupo2'
 
         dynamodb = client('dynamodb', 'us-east-1',
-                          aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                          aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+                          aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                          aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
 
-        connection = client(
-            'ses',
-            'us-east-1',
-            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-        )
+
 
         sqs = client('sqs', 'us-east-1')
         cuantos = 0
@@ -44,7 +40,7 @@ class Command(BaseCommand):
         anterior = datetime.datetime.utcnow()
         while True:
             response = sqs.receive_message(
-                QueueUrl='https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d')
+                QueueUrl='https://sqs.us-east-1.amazonaws.com/923905721779/designmatch-d')
             if 'Messages' in response:
                 if ya_inicio == False:
                     inicio = datetime.datetime.utcnow()
@@ -109,25 +105,40 @@ class Command(BaseCommand):
                             diseno['email'],
                             'Disponible')
 
-                    response = connection.send_email(
-                        Destination={
-                            'ToAddresses': [diseno['email']]
+                    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+
+                    data = {
+                        "personalizations": [
+                            {
+                                "to": [
+                                    {
+                                        "email": [diseno['email']]
+                                    }
+                                ],
+                                "subject": 'DesignMatch: Tus diseños ya están disponibles'
+                            }
+                        ],
+                        "from": {
+                            "email": 'je.bautista10@uniandes.edu.co'
                         },
-                        Message={
-                            'Body': {
-                                'Text': {
-                                    'Charset': 'UTF-8',
-                                    'Data': 'Tu diseño ya está disponible\n\
-                                http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/'+diseno_id,
-                                },
-                            },
-                            'Subject': {
-                                'Charset': 'UTF-8',
-                                'Data': 'DesignMatch: Tus diseños ya están disponibles',
-                            },
-                        },
-                        Source='je.bautista10@uniandes.edu.co',
-                    )
+                        "content": [
+                            {
+                                "type": "text/plain",
+                                "value": 'Tu diseño ya está disponible\n\
+                                                    http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/' + diseno_id
+                            }
+                        ]
+                    }
+
+                    response = sg.client.mail.send.post(request_body=data)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+
+
+
+
+
                     # Let the queue know that the message is processed
                     end = datetime.datetime.utcnow()
                     dynamodb.put_item(
@@ -140,7 +151,7 @@ class Command(BaseCommand):
                     )
                     sqsr = resource('sqs', 'us-east-1')
                     message = sqsr.Message(
-                        'https://sqs.us-east-1.amazonaws.com/547712166517/designmatch-d', message['ReceiptHandle'])
+                        'https://sqs.us-east-1.amazonaws.com/923905721779/designmatch-d', message['ReceiptHandle'])
                     message.delete()
                     cuantos = cuantos + 1
                     if ya == False and (end-inicio).total_seconds() >= 60:
