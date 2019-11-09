@@ -476,11 +476,10 @@ def login(request):
                 key=empresaCache['token'])))
 
 @csrf_exempt
-def get_upload_key():
+def get_upload_key(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        upload_key = uuid4().hex
         s3 = client('s3', 'us-east-1', aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'] )
         presigned_url = s3.generate_presigned_url(
             ClientMethod='put_object',
