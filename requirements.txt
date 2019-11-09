@@ -21,7 +21,6 @@ django-ses==0.8.12
 djangorestframework==3.9.4
 docutils==0.15.2
 future==0.17.1
-futures==3.3.0
 gunicorn==19.9.0
 idna==2.8
 importlib-metadata==0.20
