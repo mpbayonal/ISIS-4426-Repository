@@ -487,7 +487,7 @@ def get_upload_key(request):
                 'Bucket': s3_images_bucket,
                 'Key': body['key'],
                 'ContentType': body['type'],
-                'ACL': 'public-read-write'
+                'ACL': 'bucket-owner-full-control'
             }
         )
         return JsonResponse({"upload_url": presigned_url})
