@@ -190,7 +190,7 @@ class Command(BaseCommand):
                             from_email='mpblatorre@hotmail.com',
                             to_emails=[diseno['email']],
                             subject='DesignMatch: Tus diseño no fue procesado',
-                            html_content='Tu diseño no pudo fue procesado' )
+                            html_content='Tu diseño no pudo ser procesado' )
 
                         print(data)
 
