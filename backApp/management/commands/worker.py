@@ -68,9 +68,10 @@ class Command(BaseCommand):
                     objs = list(bucket.objects.filter(Prefix=key))
                     print(key)
                     print(objs)
+                    temp =  './tmp/' + diseno['archivo'].replace('noProcesado/', '')
+                    print(temp)
 
-                    s3.Bucket(s3_images_bucket).download_file(diseno['archivo'],
-                                                              './tmp/' + diseno['archivo'].replace('noProcesado/', ''))
+                    s3.Bucket(s3_images_bucket).download_file(diseno['archivo'], temp)
 
                     img = Image.open(
                         './tmp/' + diseno['archivo'].replace('noProcesado/', ''), "r")
