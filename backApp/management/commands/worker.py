@@ -152,16 +152,16 @@ class Command(BaseCommand):
                         ]
                     }
 
-                    message = Mail(
-                        from_email='mpblatorre@gmail.com',
+                    data = Mail(
+                        from_email='mpblatorre@hotmail.com',
                         to_emails=[diseno['email']],
                         subject='DesignMatch: Tus diseños ya están disponibles',
                         html_content='Tu diseño ya está disponible\n\
-                                                    http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/')
+                                                    http://d2b4n7yi665yz4.cloudfront.net/empresa/proyectos/diseños/'+diseno_id)
 
-                    print(message)
+                    print(data)
 
-                    response = sg.send(message)
+                    response = sg.send(data)
 
 
                     print(response.status_code)
