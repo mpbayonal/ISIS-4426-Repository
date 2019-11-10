@@ -68,7 +68,9 @@ class Command(BaseCommand):
                     key = diseno['archivo']
                     objs = list(bucket.objects.filter(Prefix=key))
                     print(key)
+
                     print(objs)
+                    logging.error(objs)
 
                     logging.error(key)
                     temp =  './tmp/' + diseno['archivo'].replace('noProcesado/', '')
