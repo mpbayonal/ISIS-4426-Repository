@@ -9,6 +9,7 @@ import os
 
 from django.utils.crypto import get_random_string
 from boto3 import client, resource
+import logging
 
 from botocore.exceptions import ClientError
 from sendgrid.helpers.mail import Mail
@@ -68,10 +69,13 @@ class Command(BaseCommand):
                     objs = list(bucket.objects.filter(Prefix=key))
                     print(key)
                     print(objs)
+
+                    logging.error(key)
                     temp =  './tmp/' + diseno['archivo'].replace('noProcesado/', '')
+                    logging.error(temp)
                     print(temp)
 
-                    s3.Bucket(s3_images_bucket).download_file(diseno['archivo'], temp)
+                    s3.Bucket(s3_images_bucket).download_file(key, temp)
 
                     img = Image.open(
                         './tmp/' + diseno['archivo'].replace('noProcesado/', ''), "r")
