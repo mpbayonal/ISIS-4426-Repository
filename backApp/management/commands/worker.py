@@ -183,7 +183,7 @@ class Command(BaseCommand):
                     except Exception as ex:
                         print(ex.message)
 
-                        
+
 
                         apikey = os.environ.get('SENDGRID_API_KEY')
                         print(apikey)
