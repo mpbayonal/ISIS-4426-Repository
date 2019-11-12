@@ -41,6 +41,9 @@ AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY
 AWS_STORAGE_BUCKET_NAME = 'designmatch-grupo2'
 
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+
 CORS_ORIGIN_ALLOW_ALL = True
 # Extra places for collectstatic to find static files.
 

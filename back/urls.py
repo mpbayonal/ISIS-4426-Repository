@@ -24,7 +24,7 @@ from django.views.generic.base import TemplateView
 admin.autodiscover()
 
 
-urlpatterns = [ 
+urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('backApp.urls')),
 
