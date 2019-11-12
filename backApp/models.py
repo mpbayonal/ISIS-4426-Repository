@@ -169,6 +169,8 @@ class UserCustom(DynamoDBMapperMixin, AbstractUser):
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
         urlFinal = self.username + idFinal
+        self.url =urlFinal
+        self.id = idFinal
         self.table.put_item(
             Item={
                 'username': self.username,
@@ -240,6 +242,7 @@ class Proyecto(DynamoDBMapperMixin, models.Model):
 
     def save(self, *args, **kwargs):
         idFinal = str(uuid.uuid4())
+        self.id = idFinal
         self.table.put_item(
             Item={
                 'empresa': self.empresa,

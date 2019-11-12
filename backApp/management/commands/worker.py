@@ -36,7 +36,6 @@ class Command(BaseCommand):
             logger = get_task_logger(__name__)
 
             s3_images_bucket = 'designmatch-grupo2'
-
             dynamodb = client('dynamodb', 'us-east-1',
                             aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
                             aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'])
