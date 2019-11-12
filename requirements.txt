@@ -19,6 +19,7 @@ django-bmemcached==0.2.4
 django-cors-headers==3.1.0
 django-dotenv==1.4.2
 django-filter==2.0.0
+django-heroku==0.3.1
 django-rest-auth==0.9.5
 django-ses==0.8.12
 django-storages==1.7.1
@@ -31,7 +32,7 @@ gunicorn==19.9.0
 idna==2.8
 importlib-metadata==0.20
 jmespath==0.9.4
-kombu==3.0.37
+kombu==4.6.4
 Markdown==3.1.1
 more-itertools==7.2.0
 mypy==0.740
